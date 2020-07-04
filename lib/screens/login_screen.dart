@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
+// import 'register_screen.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 import '../components/login_register_app_scaffold.dart';
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: FlatButton(
         child: Text('${AppStrings.registerButtonLabel}'),
         onPressed: () {
-          pushRegister();
+          // pushRegister();
         },
       ),
     );
@@ -159,8 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return MediaQuery.of(context).size.height * 0.02;
   }
 
-  void pushRegister() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterScreen()));
-  }
+  // void pushRegister() {
+  //   Navigator.push(
+  //       context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+  // }
 }
