@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../app/app_styles.dart';
 
 class AppScaffold extends StatelessWidget {
-
   final Widget title;
   final Color backgroundColor;
   final Widget body;
 
-  AppScaffold({Key key, this.title, this.backgroundColor, this.body}) : super(key: key);
+  AppScaffold({Key key, this.title, this.backgroundColor, this.body})
+      : super(key: key);
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class AppScaffold extends StatelessWidget {
         brightness: Brightness.light,
         iconTheme: IconThemeData(color: AppStyles.navBarIconColor),
       ),
-      body: body
+      body: body,
     );
   }
 }
