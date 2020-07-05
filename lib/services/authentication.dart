@@ -9,4 +9,11 @@ class AuthenticationManager {
     FirebaseUser user = result.user;
     return user != null ? user.uid : null;
   }
+
+  Future<String> register(String email, String password) async {
+    AuthResult result = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    FirebaseUser user = result.user;
+    return user != null ? user.uid : null;
+  }
 }
