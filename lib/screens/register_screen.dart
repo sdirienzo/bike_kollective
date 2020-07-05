@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'register_screen.dart';
-import 'home_screen.dart';
+import 'login_screen.dart';
 import '../components/size_calculator.dart';
 import '../services/authentication.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({Key key}) : super(key: key);
 
   static const appLogoPath = 'lib/assets/images/app_logo.png';
   final AuthenticationManager auth = new AuthenticationManager();
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   var _scaffoldContext;
   var _email;
@@ -31,27 +30,26 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Builder(builder: (BuildContext context) {
         _scaffoldContext = context;
         return SafeArea(
-          child: _loginForm(),
+          child: _registerForm(),
         );
       }),
     );
   }
 
-  Widget _loginForm() {
+  Widget _registerForm() {
     return Container(
       child: Padding(
-        padding:
-            EdgeInsets.all(sizeCalculator(context, AppStyles.loginFormPadding)),
+        padding: EdgeInsets.all(
+            sizeCalculator(context, AppStyles.registerFormPadding)),
         child: Form(
           key: _formKey,
           child: ListView(
             children: <Widget>[
               _appLogo(),
-              _legalMessage(),
               _emailField(),
               _passwordField(),
-              _loginButton(),
               _registerButton(),
+              _loginButton(),
             ],
           ),
         ),
@@ -64,24 +62,16 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: EdgeInsets.only(
           top: sizeCalculator(context, AppStyles.appLogoPadding)),
       child: Image(
-        image: AssetImage(LoginScreen.appLogoPath),
+        image: AssetImage(RegisterScreen.appLogoPath),
         height: sizeCalculator(context, AppStyles.appLogoHeight),
       ),
-    );
-  }
-
-  Widget _legalMessage() {
-    return Padding(
-      padding: EdgeInsets.only(
-          top: sizeCalculator(context, AppStyles.legalMessagePadding)),
-      child: Text('${AppStrings.legalMessage}'),
     );
   }
 
   Widget _emailField() {
     return Padding(
       padding: EdgeInsets.only(
-          top: sizeCalculator(context, AppStyles.loginEmailFieldPadding)),
+          top: sizeCalculator(context, AppStyles.registerEmailFieldPadding)),
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.emailAddress,
@@ -114,20 +104,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _loginButton() {
+  Widget _registerButton() {
     return Padding(
       padding: EdgeInsets.only(
-          top: sizeCalculator(context, AppStyles.loginButtonPadding)),
+          top: sizeCalculator(context, AppStyles.registerButtonPadding)),
       child: SizedBox(
         child: RaisedButton(
           color: AppStyles.primaryButtonColor,
           textColor: AppStyles.primaryButtonTextColor,
-          child: Text('${AppStrings.loginButtonLabel}'),
+          child: Text('${AppStrings.registerButtonLabel}'),
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               _formKey.currentState.save();
-              submitCredentials().then((result) {
-                proceedWithLoginResult();
+              submitRegistration().then((value) {
+                proceedWithRegistrationResults();
               });
             }
           },
@@ -136,21 +126,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _registerButton() {
+  Widget _loginButton() {
     return SizedBox(
       child: FlatButton(
-        child: Text('${AppStrings.registerButtonLabel}'),
+        child: Text('${AppStrings.loginButtonLabel}'),
         onPressed: () {
-          pushRegister();
+          pushLogin();
         },
       ),
     );
   }
 
-  Widget _loginErrorSnackBar(String errorMessage) {
+  Widget _registerErrorSnackBar(String errorMessage) {
     return SnackBar(
-      content: Text(errorMessage, textAlign: AppStyles.loginErrorTextAlignment),
-      backgroundColor: AppStyles.loginErrorBackgroundColor,
+      content:
+          Text(errorMessage, textAlign: AppStyles.registerErrorTextAlignment),
+      backgroundColor: AppStyles.registerErrorBackgroundColor,
     );
   }
 
@@ -162,43 +153,49 @@ class _LoginScreenState extends State<LoginScreen> {
     return value.isEmpty ? '${AppStrings.passwordFieldHint}' : null;
   }
 
-  Future<void> submitCredentials() async {
+  Future<void> submitRegistration() async {
     // todo: revisit to determine if this is best way to implement
     try {
-      _userId = await widget.auth.signIn(_email, _password);
+      _userId = await widget.auth.register(_email, _password);
     } catch (e) {
       _error = e.code;
     }
   }
 
-  void proceedWithLoginResult() {
+  void proceedWithRegistrationResults() {
     if (_userId == null) {
       switch (_error) {
         case AppStrings.invalidEmailErrorCode:
-        case AppStrings.wrongPasswordErrorCode:
-        case AppStrings.noUserErrorCode:
-        case AppStrings.disabledUserErrorCode:
-        case AppStrings.tooManyRequestErrorCode:
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _registerErrorSnackBar(AppStrings.invalidEmailErrorMessage));
+          break;
+        case AppStrings.weakPasswordErrorCode:
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _registerErrorSnackBar(AppStrings.weakPasswordErrorMessage));
+          break;
+        case AppStrings.emailInUseErrorCode:
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _registerErrorSnackBar(AppStrings.emailInUseErrorMessage));
+          break;
+        case AppStrings.invalidCredentialErrorCode:
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _registerErrorSnackBar(AppStrings.invalidEmailErrorMessage));
+          break;
         case AppStrings.operationNotAllowedErrorCode:
-          Scaffold.of(_scaffoldContext)
-              .showSnackBar(_loginErrorSnackBar(AppStrings.loginErrorMessage));
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _registerErrorSnackBar(AppStrings.operationNotAllowedErrorCode));
           break;
         default:
           Scaffold.of(_scaffoldContext).showSnackBar(
-              _loginErrorSnackBar(AppStrings.unexpectedErrorMessage));
+              _registerErrorSnackBar(AppStrings.unexpectedErrorMessage));
       }
     } else {
-      pushHome();
+      pushLogin();
     }
   }
 
-  void pushRegister() {
+  void pushLogin() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterScreen()));
-  }
-
-  void pushHome() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }
