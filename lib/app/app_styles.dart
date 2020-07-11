@@ -12,6 +12,9 @@ class AppStyles {
   static final appLogoHeight = 0.2;
   static final appLogoPadding = 0.11;
 
+  static final appLogoThumbnailHeight = 0.08;
+  static final appLogoThumbnailPadding = 16.0;
+
   static final loginFormPadding = 0.04;
   static final legalMessagePadding = 0.07;
   static final loginEmailFieldPadding = 0.01;
@@ -26,4 +29,7 @@ class AppStyles {
 
   static final registerErrorTextAlignment = TextAlign.center;
   static final registerErrorBackgroundColor = Colors.red;
+
+  static final appDrawerTextColor = Colors.black;
+  static final appDrawerIconColor = Colors.black;
 }

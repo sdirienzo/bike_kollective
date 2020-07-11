@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: AppStrings.appTitle,
       home: LoginScreen(),
+      theme: ThemeData(canvasColor: Colors.white),
     );
   }
 }

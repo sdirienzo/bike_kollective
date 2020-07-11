@@ -45,4 +45,6 @@ class AppStrings {
       'Password is too weak.  Please try again';
   static const emailInUseErrorMessage =
       'Email is already in use.  Please try again';
+
+  static const appDrawerLogoutLabel = 'Log Out';
 }
