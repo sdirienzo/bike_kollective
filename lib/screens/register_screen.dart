@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import '../components/size_calculator.dart';
-import '../services/authentication.dart';
+import '../services/authentication_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 

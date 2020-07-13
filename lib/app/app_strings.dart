@@ -2,6 +2,9 @@ class AppStrings {
   /// App-wide strings
   static const appTitle = 'BIKE KOLLECTIVE';
 
+  /// AppDrawer/Sidebar strings
+  static const appDrawerLogoutLabel = 'Log Out';
+
   /// Login and Register screen common strings
   static const emailFieldLabel = 'Email';
   static const emailFieldHint = 'Please enter an email address';
@@ -45,4 +48,10 @@ class AppStrings {
       'Password is too weak.  Please try again';
   static const emailInUseErrorMessage =
       'Email is already in use.  Please try again';
+
+  /// Location Request screen strings
+  static const locationOffMessage = 'Location services are off';
+  static const locationOffDetails =
+      'Turn on location services to search for bikes near you';
+  static const turnOnLocationButtonLabel = 'TURN ON';
 }
