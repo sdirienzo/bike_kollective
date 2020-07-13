@@ -7,9 +7,11 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationRequestScreen extends StatelessWidget {
-  LocationRequestScreen({Key key, this.userEmail}) : super(key: key);
+  LocationRequestScreen({Key key, this.userEmail, this.locationServiceEnabled})
+      : super(key: key);
 
   final String userEmail;
+  final bool locationServiceEnabled;
   final LatLng _center = const LatLng(39.8283, -98.5795);
   GoogleMapController _mapController;
 
@@ -22,13 +24,11 @@ class LocationRequestScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "BIKE KOLLECTIVE",
-          style: TextStyle(
-            color: Colors.black,
-          ),
+          '${AppStrings.appTitle}',
+          style: AppStyles.titleText,
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppStyles.navBarColorDefault,
         iconTheme: IconThemeData(color: Colors.black),
       ),
       drawer: LocationOffAppDrawer(userEmail: userEmail),
@@ -66,7 +66,7 @@ class LocationRequestScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Location services are off',
+          '${AppStrings.locationOffMessage}',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ],
@@ -79,7 +79,7 @@ class LocationRequestScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Turn on location services to search for bikes near you'),
+          Text('${AppStrings.locationOffDetails}'),
         ],
       ),
     );
@@ -102,9 +102,13 @@ class LocationRequestScreen extends StatelessWidget {
     return RaisedButton(
       color: AppStyles.primaryButtonColor,
       textColor: AppStyles.primaryButtonTextColor,
-      child: Text('TURN ON'),
+      child: Text('${AppStrings.turnOnLocationButtonLabel}'),
       onPressed: () {
-        AppSettings.openLocationSettings();
+        if (!locationServiceEnabled) {
+          AppSettings.openLocationSettings();
+        } else {
+          AppSettings.openAppSettings();
+        }
       },
     );
   }

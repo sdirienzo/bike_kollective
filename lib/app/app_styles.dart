@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppStyles {
+  static final Color _textColorTitle = Colors.black;
+
+  static final titleText = TextStyle(
+    color: _textColorTitle,
+  );
+
   static final navBarColorDefault = Colors.white;
   static final navBarIconColor = Colors.black;
 
