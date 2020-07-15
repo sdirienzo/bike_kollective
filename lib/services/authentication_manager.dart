@@ -16,4 +16,13 @@ class AuthenticationManager {
     FirebaseUser user = result.user;
     return user != null ? user.uid : null;
   }
+
+  Future<String> getCurrentUserEmail() async {
+    FirebaseUser user = await _auth.currentUser();
+    return user.email;
+  }
+
+  Future<void> signOut() async {
+    return _auth.signOut();
+  }
 }

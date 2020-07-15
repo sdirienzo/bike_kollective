@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'register_screen.dart';
 import 'home_screen.dart';
 import '../components/size_calculator.dart';
-import '../services/authentication.dart';
+import '../services/authentication_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
 
   static const appLogoPath = 'lib/assets/images/app_logo.png';
-  final AuthenticationManager auth = new AuthenticationManager();
+  final AuthenticationManager _auth = AuthenticationManager();
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> submitCredentials() async {
     // todo: revisit to determine if this is best way to implement
     try {
-      _userId = await widget.auth.signIn(_email, _password);
+      _userId = await widget._auth.signIn(_email, _password);
     } catch (e) {
       _error = e.code;
     }
@@ -198,7 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void pushHome() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen(userEmail: _email)),
+        (Route<dynamic> route) => false);
   }
 }
