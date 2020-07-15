@@ -111,7 +111,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                   : Image.file(_image, width:300,height: 300),
                   ),
                   Container(
-                    child: MaterialButton(
+                    child: RaisedButton(
                       child: Text("Bike is Secure and Ready to Share"),
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
