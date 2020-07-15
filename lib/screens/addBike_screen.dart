@@ -85,3 +85,4 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   }
   
 }
+
