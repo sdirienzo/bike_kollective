@@ -114,6 +114,29 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
     });
   }
 
+  // user defined function
+  void _showPictureDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text("Please take a picture of the bike!"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +153,6 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                 children: <Widget>[
                   FormBuilderDropdown(
                     attribute: "bikeType",
-                    decoration: InputDecoration(labelText: "Type of Bike"),
                     hint: Text('Select Type of Bike'),
                     validators: [FormBuilderValidators.required()],
                     items: ['Road Bike', 'Commuting Bike', 'Single Speed']
@@ -143,7 +165,6 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                     attribute: "bikeSize",
                     decoration: InputDecoration(labelText: "Size of Bike (inches)"),
                     validators: [
-                      FormBuilderValidators.minLength(2),
                       FormBuilderValidators.maxLength(4),
                       FormBuilderValidators.required(),
                       FormBuilderValidators.min(25),
@@ -158,8 +179,17 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                     ],
                   ),
                   Container(
+                    margin: const EdgeInsets.only(top:30.0, bottom:30.0),
                     child: _image == null
-                  ? Text('No image selected.')
+                  ? IconButton(
+                      icon: Icon(
+                              Icons.add_a_photo,
+                              color: Colors.blue,
+                              size: 60.0
+                            ),
+                      onPressed: _showChoiceDialog,
+                      
+                    )  
                   : Image.file(_image,),
                   ),
                   Container(
@@ -167,7 +197,13 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                       child: Text("Bike is Secure and Ready to Share"),
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
+                          if (_image != null) {
+                            print(_fbKey.currentState.value);
+                          }
+                          if (_image == null) {
+                            _showPictureDialog();
+                          }
+                          
                         }
                       },
                     ),
@@ -177,11 +213,6 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
             ),  
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showChoiceDialog,
-        tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
       ),
     );
   }
