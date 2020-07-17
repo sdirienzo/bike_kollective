@@ -114,7 +114,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
     });
   }
 
-  // user defined function
+  // altert pop-up asking for a bike picture
   void _showPictureDialog() {
     // flutter defined function
     showDialog(
