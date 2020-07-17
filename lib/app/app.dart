@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appTitle,
-      home: AddBikeScreen(),
+      home: LoginScreen(),
       theme: ThemeData(canvasColor: Colors.white),
     );
   }
