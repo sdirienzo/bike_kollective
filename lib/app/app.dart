@@ -1,4 +1,3 @@
-import 'package:bike_kollective/screens/addBike_screen.dart';
 import 'package:flutter/material.dart';
 import 'app_strings.dart';
 import '../screens/login_screen.dart';
