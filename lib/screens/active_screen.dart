@@ -1,13 +1,8 @@
 import 'dart:io';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart' as Path;  
-import 'package:exif/exif.dart';
-import 'package:image/image.dart' as img;
 import 'package:geolocator/geolocator.dart';
 
 class ActiveScreen extends StatefulWidget {
@@ -18,10 +13,78 @@ class ActiveScreen extends StatefulWidget {
 }
 
 class _ActiveScreenState extends State<ActiveScreen> {
+  
+  final firestoreInstance = Firestore.instance;
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+  Position _currentPosition;
+
+   getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  String getImageURL() {
+    String bikeImgURL;
+
+    firestoreInstance.collection("bikes").document(uid).get().then((value){
+      bikeImgURL = value.data["image"];
+    });
+    return bikeImgURL;
+  }
+
+  String getCombo() {
+    String bikeCombo;
+
+    firestoreInstance.collection("bikes").document(uid).get().then((value){
+      bikeCombo = value.data["combination"];
+    });
+    return bikeCombo;
+  }
+  
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Active Ride'),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Text("Active Ride"),
+            Image.network(getImageURL()),
+            Text(getCombo()),
+            RaisedButton(
+              child: Text("Check In"),
+              onPressed: () {
+                getCurrentLocation();
+                var inputLat = _currentPosition.latitude;
+                var inputLng = _currentPosition.longitude;
+
+                // Add data to Firestore
+                firestoreInstance.collection("bikes").document(uid).updateData(
+                {
+                  "checkedOut" : false,
+                  "latitude" : inputLat,
+                  "longitude" : inputLng, 
+                }).then((_){
+                  print("Success!");
+                });
+              }             
+            )
+          ]
+        ),
+      ),
+    );
+
   }
 
 }
