@@ -1,8 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path/path.dart' as Path;  
 import 'package:geolocator/geolocator.dart';
 
 class ActiveScreen extends StatefulWidget {
@@ -19,7 +16,9 @@ class _ActiveScreenState extends State<ActiveScreen> {
 
   Position _currentPosition;
 
-  var uid;
+  String bikeImgURL, bikeCombo;
+
+  String uid = "BBNBYHQwq3aWriNlAc9S"; 
 
    getCurrentLocation() {
     geolocator
@@ -32,25 +31,25 @@ class _ActiveScreenState extends State<ActiveScreen> {
       print(e);
     });
   }
+  
+  
 
-  String getImageURL() {
-    String bikeImgURL;
-
+  String getImageURL(String docID) {
     firestoreInstance.collection("bikes").document(uid).get().then((value){
       bikeImgURL = value.data["image"];
     });
     return bikeImgURL;
   }
 
-  String getCombo() {
-    String bikeCombo;
-
+  String getCombo(String docID) {
     firestoreInstance.collection("bikes").document(uid).get().then((value){
       bikeCombo = value.data["combination"];
     });
     return bikeCombo;
   }
   
+  
+
   @override
   Widget build(BuildContext context) {
 
@@ -62,8 +61,8 @@ class _ActiveScreenState extends State<ActiveScreen> {
         child: Column(
           children: <Widget>[
             Text("Active Ride"),
-            Image.network(getImageURL()),
-            Text(getCombo()),
+            Image.network(getImageURL(uid)),
+            Text(getCombo(uid)),
             RaisedButton(
               child: Text("Check In"),
               onPressed: () {
@@ -78,8 +77,10 @@ class _ActiveScreenState extends State<ActiveScreen> {
                   "latitude" : inputLat,
                   "longitude" : inputLng, 
                 }).then((_){
-                  print("Success!");
+                  Navigator.pushNamed(context, '/add');
                 });
+                
+
               }             
             )
           ]
@@ -90,3 +91,4 @@ class _ActiveScreenState extends State<ActiveScreen> {
   }
 
 }
+
