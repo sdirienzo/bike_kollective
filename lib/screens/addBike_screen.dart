@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path/path.dart' as Path;  
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
@@ -39,6 +39,10 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
 
     final height = originalImage.height;
     final width = originalImage.width;
+
+    //final GoogleSignIn _googleSignIn = GoogleSignIn();
+    //final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
     // Let's check for the image size
     // This will be true also for upside-down photos but it's ok for me
@@ -270,6 +274,8 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                             var inputLat = _currentPosition.latitude;
                             var inputLng = _currentPosition.longitude;
 
+                            var _documentID;
+
                             // Add data to Firestore
                             firestoreInstance.collection("bikes").add(
                             {
@@ -281,9 +287,12 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                               "longitude" : inputLng,
                               "image" : _uploadedFileURL,
                             }).then((value){
-                              print(value.documentID);
+                              _documentID = value.documentID;
                             });
                             
+                            if (_documentID != 0) {
+                              Navigator.pushNamed(context, '/active');
+                            }
                           } 
                           if (_image == null) {
                             _showPictureDialog();
