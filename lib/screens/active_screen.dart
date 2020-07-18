@@ -19,6 +19,8 @@ class _ActiveScreenState extends State<ActiveScreen> {
 
   Position _currentPosition;
 
+  var uid;
+
    getCurrentLocation() {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
