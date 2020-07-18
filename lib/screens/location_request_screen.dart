@@ -51,9 +51,9 @@ class LocationRequestScreen extends StatelessWidget {
           padding: EdgeInsets.only(left: 16.0, top: 20.0, right: 16.0),
           child: Column(
             children: <Widget>[
-              _firstRow(),
-              _secondRow(),
-              _thirdRow(),
+              _locationOffMessageRow(),
+              _locationOffDetailsRow(),
+              _turnOnLocationButtonRow(),
             ],
           ),
         ),
@@ -61,7 +61,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _firstRow() {
+  Widget _locationOffMessageRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -73,7 +73,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _secondRow() {
+  Widget _locationOffDetailsRow() {
     return Padding(
       padding: EdgeInsets.only(top: 16.0),
       child: Row(
@@ -85,7 +85,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _thirdRow() {
+  Widget _turnOnLocationButtonRow() {
     return Padding(
       padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(

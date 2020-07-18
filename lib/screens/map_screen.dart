@@ -67,7 +67,7 @@ class _MapScreenState extends State<MapScreen> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            "BIKE KOLLECTIVE",
+            '${AppStrings.appTitle}',
             style: TextStyle(
               color: Colors.black,
             ),
@@ -77,9 +77,9 @@ class _MapScreenState extends State<MapScreen> {
           iconTheme: IconThemeData(color: Colors.black),
         ),
         body: GoogleMap(
-          onMapCreated: _onMapCreated,
           mapType: MapType.normal,
           myLocationEnabled: true,
+          onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
             target: _center,
             zoom: 18.0,
