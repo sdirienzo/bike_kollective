@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'location_request_screen.dart';
+import 'loading_screen.dart';
 import 'map_screen.dart';
-import '../app/app_styles.dart';
-import '../app/app_strings.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.userEmail}) : super(key: key);
@@ -69,16 +67,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return screenToDisplay();
+    return _screenToDisplay();
   }
 
-  Widget screenToDisplay() {
+  Widget _screenToDisplay() {
     if (_locationServiceStatus == null) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return LoadingScreen();
     } else if (_locationServiceStatus &&
         _locationPermissionStatus == PermissionStatus.granted) {
       return MapScreen(userEmail: widget.userEmail);

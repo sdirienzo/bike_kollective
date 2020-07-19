@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       //'/bikeDetails': (context) => BikeDetailsScreen(),
       '/active' : (context) => ActiveScreen(),
       //'/rate' : (context) => RateScreen(),
-      },    
+      },
     );
   }
 }
