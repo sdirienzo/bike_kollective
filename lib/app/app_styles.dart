@@ -7,8 +7,8 @@ class AppStyles {
     color: _textColorTitle,
   );
 
-  static final navBarColorDefault = Colors.white;
-  static final navBarIconColor = Colors.black;
+  static final appBarColorDefault = Colors.white;
+  static final appBarIconColor = Colors.black;
 
   static final primaryScaffoldBackgroundColor = Colors.white;
 
