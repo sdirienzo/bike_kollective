@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -21,18 +23,25 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Location _location = Location();
   GoogleMapController _mapController;
+  StreamSubscription _locChangeSubscription;
   LocationData _currentLocation;
   LatLng _center;
   Set<Marker> _markers = Set<Marker>();
 
   @override
   void initState() {
-    _location.onLocationChanged.listen((newLoc) {
+    _locChangeSubscription = _location.onLocationChanged.listen((newLoc) {
       _currentLocation = newLoc;
       _updateLocationIndicator();
     });
     _getInitialLocation();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _locChangeSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _getInitialLocation() async {
@@ -44,7 +53,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _updateLocationIndicator() async {
-    // print(_mapController == null);
     _mapController.getZoomLevel().then((level) {
       CameraPosition position = CameraPosition(
         zoom: level,
