@@ -6,11 +6,13 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationOffAppDrawer extends StatelessWidget {
-  LocationOffAppDrawer({Key key, this.userEmail}) : super(key: key);
+  // todo: add back userEmail named parameter
+  LocationOffAppDrawer({Key key}) : super(key: key);
 
   static const appLogoPath = 'lib/assets/images/app_logo.png';
   final AuthenticationManager _auth = AuthenticationManager();
-  final userEmail;
+  // todo: change back to final
+  static const userEmail = 'testuser@test.com';
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,8 @@ class LocationOffAppDrawer extends StatelessWidget {
       ),
       title: Text('${AppStrings.appDrawerLogoutLabel}'),
       onTap: () {
-        _logout();
-        _pushLogin(context);
+        // _logout();
+        // _pushLogin(context);
       },
     );
   }

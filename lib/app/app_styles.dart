@@ -12,6 +12,9 @@ class AppStyles {
 
   static final primaryScaffoldBackgroundColor = Colors.white;
 
+  static final appDrawerTextColor = Colors.black;
+  static final appDrawerIconColor = Colors.black;
+
   static final primaryButtonColor = Colors.black;
   static final primaryButtonTextColor = Colors.white;
 
@@ -36,6 +39,7 @@ class AppStyles {
   static final registerErrorTextAlignment = TextAlign.center;
   static final registerErrorBackgroundColor = Colors.red;
 
-  static final appDrawerTextColor = Colors.black;
-  static final appDrawerIconColor = Colors.black;
+  static final bikeDetailsPadding = 0.04;
+  static final bikeDetailsImageHeight = 0.2;
+  static final checkoutButtonPadding = 0.04;
 }

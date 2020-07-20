@@ -7,7 +7,8 @@ import 'map_screen.dart';
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.userEmail}) : super(key: key);
 
-  final userEmail;
+  // todo: change back to final
+  var userEmail;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -75,10 +76,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return LoadingScreen();
     } else if (_locationServiceStatus &&
         _locationPermissionStatus == PermissionStatus.granted) {
-      return MapScreen(userEmail: widget.userEmail);
+      // todo: add back user email to arguments list
+      return MapScreen();
     } else {
+      // todo: add userEmail back to arguments list
       return LocationRequestScreen(
-          userEmail: widget.userEmail,
           locationServiceEnabled: _locationServiceStatus);
     }
   }
