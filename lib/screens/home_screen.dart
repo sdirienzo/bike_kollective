@@ -79,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       // todo: add back user email to arguments list
       return MapScreen();
     } else {
+      // todo: add userEmail back to arguments list
       return LocationRequestScreen(
-          userEmail: widget.userEmail,
           locationServiceEnabled: _locationServiceStatus);
     }
   }
