@@ -1,7 +1,8 @@
+import 'package:bike_kollective/screens/active_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'loading_screen.dart';
-import 'active_screen.dart';
+import '../app/app.dart';
 import '../components/app_scaffold.dart';
 import '../components/size_calculator.dart';
 import '../services/database_manager.dart';
@@ -145,7 +146,7 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
       Scaffold.of(_scaffoldContext).showSnackBar(
           _checkOutErrorSnackBar(AppStrings.bikeCheckedOutErrorMessage));
     } else {
-      _pushActiveRide();
+      _pushActiveRide(_bike.documentID);
     }
   }
 
@@ -153,8 +154,14 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     return _bike['${AppStrings.bikeCheckedOutKey}'];
   }
 
-  void _pushActiveRide() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ActiveScreen()));
+  void _pushActiveRide(documentID) {
+    Navigator.pushNamed(
+      context,
+      ActiveScreen.routeName,
+      arguments: ScreenArguments(
+        _bike,
+        documentID,
+      ),
+    );
   }
 }

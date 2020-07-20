@@ -207,15 +207,15 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                         child: Text("$bikeType")
                     )).toList(),
                   ),
-                  FormBuilderTextField(
+                  FormBuilderDropdown(
                     attribute: "bikeSize",
-                    decoration: InputDecoration(labelText: "Size of Bike (inches)"),
-                    validators: [
-                      FormBuilderValidators.maxLength(4),
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.min(25),
-                      FormBuilderValidators.max(38),
-                    ],
+                    hint: Text('Select Size of Bike'),
+                    validators: [FormBuilderValidators.required()],
+                    items: ['Small', 'Medium', 'Large']
+                      .map((bikeSize) => DropdownMenuItem(
+                        value: bikeSize,
+                        child: Text("$bikeSize")
+                    )).toList(),
                   ),
                   FormBuilderTextField(
                     attribute: "bikeCombo",
@@ -291,7 +291,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                             });
                             
                             if (_documentID != 0) {
-                              Navigator.pushNamed(context, '/active');
+                              Navigator.pop(context);
                             }
                           } 
                           if (_image == null) {
