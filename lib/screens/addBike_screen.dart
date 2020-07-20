@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:bike_kollective/screens/home_screen.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -292,12 +291,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                             });
                             
                             if (_documentID != 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),        
-                                ),
-                              );
+                              Navigator.pop(context);
                             }
                           } 
                           if (_image == null) {
