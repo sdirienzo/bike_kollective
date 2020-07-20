@@ -5,9 +5,9 @@ import '../components/size_calculator.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
-class LocationOffAppDrawer extends StatelessWidget {
+class LocationOnAppDrawer extends StatelessWidget {
   // todo: add back userEmail named parameter
-  LocationOffAppDrawer({Key key}) : super(key: key);
+  LocationOnAppDrawer({Key key}) : super(key: key);
 
   static const appLogoPath = 'lib/assets/images/app_logo.png';
   final AuthenticationManager _auth = AuthenticationManager();
@@ -20,6 +20,8 @@ class LocationOffAppDrawer extends StatelessWidget {
       child: ListView(
         children: <Widget>[
           _header(context),
+          _bikesTile(context),
+          _addBikeTile(context),
           _logoutTile(context),
         ],
       ),
@@ -51,6 +53,32 @@ class LocationOffAppDrawer extends StatelessWidget {
     return Text(userEmail);
   }
 
+  Widget _bikesTile(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        Icons.directions_bike,
+        color: AppStyles.appDrawerIconColor,
+      ),
+      title: Text('${AppStrings.appDrawerBikesLabel}'),
+      onTap: () {
+        // _pushBikeList(context);
+      },
+    );
+  }
+
+  Widget _addBikeTile(BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        Icons.add,
+        color: AppStyles.appDrawerIconColor,
+      ),
+      title: Text('${AppStrings.appDrawerAddBikeLabel}'),
+      onTap: () {
+        _pushAddBike(context);
+      },
+    );
+  }
+
   Widget _logoutTile(BuildContext context) {
     return ListTile(
       leading: Icon(
@@ -67,6 +95,15 @@ class LocationOffAppDrawer extends StatelessWidget {
 
   Future<void> _logout() async {
     return await _auth.signOut();
+  }
+
+  // Need to update once bike list screen is complete
+  void _pushBikeList(BuildContext context) {
+    Navigator.pushNamed(context, '/list');
+  }
+
+  void _pushAddBike(BuildContext context) {
+    Navigator.pushNamed(context, '/add');
   }
 
   void _pushLogin(BuildContext context) {

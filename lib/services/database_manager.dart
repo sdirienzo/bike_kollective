@@ -8,4 +8,8 @@ class DatabaseManager {
         .where('checkedOut', isEqualTo: false)
         .snapshots();
   }
+
+  Future<DocumentSnapshot> getBike(String documentID) async {
+    return Firestore.instance.document('bikes/$documentID').get();
+  }
 }

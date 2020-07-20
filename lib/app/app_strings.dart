@@ -1,8 +1,18 @@
 class AppStrings {
   /// App-wide strings
   static const appTitle = 'BIKE KOLLECTIVE';
+  static const bikeCheckedOutKey = 'checkedOut';
+  static const bikeCombinationKey = 'combination';
+  static const bikeImageKey = 'image';
+  static const bikeLatitudeKey = 'latitude';
+  static const bikeLongitudeKey = 'longitude';
+  static const bikeSizeKey = 'size';
+  static const bikeTypeKey = 'type';
+  static const bikeRatingKey = 'rating';
 
   /// AppDrawer/Sidebar strings
+  static const appDrawerBikesLabel = 'Bikes';
+  static const appDrawerAddBikeLabel = 'Add Bike';
   static const appDrawerLogoutLabel = 'Log Out';
 
   /// Login and Register screen common strings
@@ -54,4 +64,14 @@ class AppStrings {
   static const locationOffDetails =
       'Turn on location services to search for bikes near you';
   static const turnOnLocationButtonLabel = 'TURN ON';
+
+  /// Bike Details screen strings
+  static const bikeDetailsScreenTitle = 'BIKE DETAILS';
+  static const checkoutButtonLabel = 'Check Out';
+
+  /// Check Out error messages
+  static const bikeCheckedOutErrorMessage =
+      'Bike is already checked out.  Please try a different bike';
+  static const bikeTooFarAwaryErrorMessage =
+      'Bike is too far away.  Please try a closer bike';
 }

@@ -2,21 +2,27 @@ import 'package:flutter/material.dart';
 import '../app/app_styles.dart';
 
 class AppScaffold extends StatelessWidget {
-  final Widget title;
-  final Color backgroundColor;
+  final String title;
+  final Widget drawer;
   final Widget body;
 
-  AppScaffold({Key key, this.title, this.backgroundColor, this.body})
-      : super(key: key);
+  AppScaffold({Key key, this.title, this.drawer, this.body}) : super(key: key);
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: title,
-        backgroundColor: backgroundColor,
+        title: Text(
+          '$title',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+        centerTitle: true,
         brightness: Brightness.light,
-        iconTheme: IconThemeData(color: AppStyles.navBarIconColor),
+        backgroundColor: AppStyles.appBarColorDefault,
+        iconTheme: IconThemeData(color: AppStyles.appBarIconColor),
       ),
+      drawer: drawer,
       body: body,
     );
   }

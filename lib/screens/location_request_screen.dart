@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:app_settings/app_settings.dart';
+import '../components/app_scaffold.dart';
 import '../components/location_off_app_drawer.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationRequestScreen extends StatelessWidget {
-  LocationRequestScreen({Key key, this.userEmail, this.locationServiceEnabled})
+  // todo: add back userEmail named parameter
+  LocationRequestScreen({Key key, this.locationServiceEnabled})
       : super(key: key);
 
-  final String userEmail;
+  // todo: change back to final
+  String userEmail;
   final bool locationServiceEnabled;
   final LatLng _center = const LatLng(39.8283, -98.5795);
   GoogleMapController _mapController;
@@ -21,17 +24,10 @@ class LocationRequestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          '${AppStrings.appTitle}',
-          style: AppStyles.titleText,
-        ),
-        centerTitle: true,
-        backgroundColor: AppStyles.navBarColorDefault,
-        iconTheme: IconThemeData(color: Colors.black),
-      ),
-      drawer: LocationOffAppDrawer(userEmail: userEmail),
+    return AppScaffold(
+      title: AppStrings.appTitle,
+      // todo: add userEmail back to arguments list
+      drawer: LocationOffAppDrawer(),
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -51,9 +47,9 @@ class LocationRequestScreen extends StatelessWidget {
           padding: EdgeInsets.only(left: 16.0, top: 20.0, right: 16.0),
           child: Column(
             children: <Widget>[
-              _firstRow(),
-              _secondRow(),
-              _thirdRow(),
+              _locationOffMessageRow(),
+              _locationOffDetailsRow(),
+              _turnOnLocationButtonRow(),
             ],
           ),
         ),
@@ -61,7 +57,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _firstRow() {
+  Widget _locationOffMessageRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -73,7 +69,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _secondRow() {
+  Widget _locationOffDetailsRow() {
     return Padding(
       padding: EdgeInsets.only(top: 16.0),
       child: Row(
@@ -85,7 +81,7 @@ class LocationRequestScreen extends StatelessWidget {
     );
   }
 
-  Widget _thirdRow() {
+  Widget _turnOnLocationButtonRow() {
     return Padding(
       padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(
