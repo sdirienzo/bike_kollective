@@ -1,10 +1,25 @@
+import 'package:bike_kollective/screens/rate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+import '../components/size_calculator.dart';
+import '../app/app_styles.dart';
+import '../app/app_strings.dart';
+import '../app/app.dart';
+
 
 class ActiveScreen extends StatefulWidget {
-  ActiveScreen({Key key,}) : super(key: key);
+  static const routeName = '/active';
 
+  final DocumentSnapshot bikeDB;
+  final String documentID;
+
+  ActiveScreen({
+    Key key, 
+    @required this.bikeDB,
+    @required this.documentID,   
+  }) : super(key: key);
+  
   @override
   _ActiveScreenState createState() => _ActiveScreenState();
 }
@@ -12,43 +27,45 @@ class ActiveScreen extends StatefulWidget {
 class _ActiveScreenState extends State<ActiveScreen> {
   
   final firestoreInstance = Firestore.instance;
-  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-  Position _currentPosition;
+  bool _isLoaded = false;
+  Image _bikeImage;
 
-  String bikeImgURL, bikeCombo;
+  int _update = 0;
 
-  String uid = "BBNBYHQwq3aWriNlAc9S"; 
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
 
-   getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
+  Location _location = Location();
+  LocationData _locationData;
+
+  @override
+  void initState() {
+    
+    _bikeImage = Image.network(widget.bikeDB['${AppStrings.bikeImageKey}']);
+    _bikeImage.image
+        .resolve(ImageConfiguration())
+        .addListener(ImageStreamListener((info, call) {
       setState(() {
-        _currentPosition = position;
+        _isLoaded = true;
       });
-    }).catchError((e) {
-      print(e);
+    }));
+    
+    _location.onLocationChanged.listen((newLoc) {
+      _locationData = newLoc;
     });
-  }
-  
-  
+    _getLocation();
 
-  String getImageURL(String docID) {
-    firestoreInstance.collection("bikes").document(uid).get().then((value){
-      bikeImgURL = value.data["image"];
-    });
-    return bikeImgURL;
+    super.initState();
   }
 
-  String getCombo(String docID) {
-    firestoreInstance.collection("bikes").document(uid).get().then((value){
-      bikeCombo = value.data["combination"];
+  Future<void> _getLocation() async {
+    var currentLocation = await _location.getLocation();
+    setState(() {
+      _locationData = currentLocation;
     });
-    return bikeCombo;
   }
-  
-  
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +78,35 @@ class _ActiveScreenState extends State<ActiveScreen> {
         child: Column(
           children: <Widget>[
             Text("Active Ride"),
-            Image.network(getImageURL(uid)),
-            Text(getCombo(uid)),
+            _image(),
+            _combo(),
             RaisedButton(
               child: Text("Check In"),
               onPressed: () {
-                getCurrentLocation();
-                var inputLat = _currentPosition.latitude;
-                var inputLng = _currentPosition.longitude;
-
+                _getLocation();
+                var _inputLat = _locationData.latitude;
+                var _inputLng = _locationData.longitude;
                 // Add data to Firestore
-                firestoreInstance.collection("bikes").document(uid).updateData(
+                firestoreInstance.collection("bikes").document(widget.documentID).updateData(
                 {
                   "checkedOut" : false,
-                  "latitude" : inputLat,
-                  "longitude" : inputLng, 
+                  "latitude" : _inputLat,
+                  "longitude" : _inputLng, 
                 }).then((_){
-                  Navigator.pushNamed(context, '/add');
+                  _update = 1;
                 });
+                
+                if (_update == 1) {
+                  print(_update);
+                  Navigator.pushNamed(
+                    context,
+                    RateScreen.routeName,
+                    arguments: ScreenArguments(
+                      widget.bikeDB,
+                      widget.documentID,
+                    ),
+                  );
+                }
                 
 
               }             
@@ -88,6 +116,22 @@ class _ActiveScreenState extends State<ActiveScreen> {
       ),
     );
 
+  }
+
+  Widget _image() {
+    return _bikeImage;
+  }
+
+  Widget _combo() {
+    return Padding(
+      padding: EdgeInsets.only(top: sizeCalculator(context, 0.04)),
+      child: Center(
+        child: Text(
+          widget.bikeDB['${AppStrings.bikeCombinationKey}'],
+          style: TextStyle(fontSize: 32),
+        ),
+      ),
+    );
   }
 
 }
