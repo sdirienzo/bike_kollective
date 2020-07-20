@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'loading_screen.dart';
+import 'bike_details_screen.dart';
 import '../services/database_manager.dart';
 import '../components/app_scaffold.dart';
 import '../components/location_on_app_drawer.dart';
@@ -9,7 +10,8 @@ import '../app/app_strings.dart';
 
 class MapScreen extends StatefulWidget {
   MapScreen({Key key, this.userEmail}) : super(key: key);
-  final String userEmail;
+  // todo: change back to final
+  String userEmail;
   final DatabaseManager _db = DatabaseManager();
 
   @override
@@ -94,7 +96,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget _mapView() {
     return AppScaffold(
       title: AppStrings.appTitle,
-      drawer: LocationOnAppDrawer(userEmail: widget.userEmail),
+      // todo: add userEmail back to arguments list
+      drawer: LocationOnAppDrawer(),
       body: StreamBuilder(
         stream: widget._db.getAllAvailableBikes(),
         builder: (context, snapshot) {
@@ -124,7 +127,13 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _pushBikeDetails(documentID) {
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => BikeDetailsScreen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BikeDetailsScreen(
+          documentID: documentID,
+        ),
+      ),
+    );
   }
 }

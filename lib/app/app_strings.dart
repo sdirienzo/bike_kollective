@@ -64,4 +64,14 @@ class AppStrings {
   static const locationOffDetails =
       'Turn on location services to search for bikes near you';
   static const turnOnLocationButtonLabel = 'TURN ON';
+
+  /// Bike Details screen strings
+  static const bikeDetailsScreenTitle = 'BIKE DETAILS';
+  static const checkoutButtonLabel = 'Check Out';
+
+  /// Check Out error messages
+  static const bikeCheckedOutErrorMessage =
+      'Bike is already checked out.  Please try a different bike';
+  static const bikeTooFarAwaryErrorMessage =
+      'Bike is too far away.  Please try a closer bike';
 }
