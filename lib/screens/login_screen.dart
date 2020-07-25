@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bike_kollective/components/screen_arguments.dart';
 import 'register_screen.dart';
 import 'home_screen.dart';
 import '../components/size_calculator.dart';
@@ -6,12 +7,13 @@ import '../services/authentication_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
-
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
-
+  static const routeName = 'login';
   static const appLogoPath = 'lib/assets/images/app_logo.png';
+
   final AuthenticationManager _auth = AuthenticationManager();
+
+  LoginScreen({Key key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -19,11 +21,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  var _scaffoldContext;
-  var _email;
-  var _password;
-  var _userId;
-  var _error;
+  var _scaffoldContext, _email, _password, _userId, _error;
 
   @override
   Widget build(BuildContext context) {
@@ -194,14 +192,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void pushRegister() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+    Navigator.pushNamed(context, RegisterScreen.routeName);
   }
 
   void pushHome() {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen(userEmail: _email)),
-        (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, HomeScreen.routeName, (route) => false,
+        arguments: ScreenArguments(userEmail: _email));
   }
 }

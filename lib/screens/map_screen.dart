@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -11,22 +11,22 @@ import '../components/location_on_app_drawer.dart';
 import '../app/app_strings.dart';
 
 class MapScreen extends StatefulWidget {
-  MapScreen({Key key, this.userEmail}) : super(key: key);
-  // todo: change back to final
-  String userEmail;
+  final String userEmail;
   final DatabaseManager _db = DatabaseManager();
+
+  MapScreen({Key key, this.userEmail}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  Location _location = Location();
   GoogleMapController _mapController;
+  Location _location = Location();
+  Set<Marker> _markers = Set<Marker>();
   StreamSubscription _locChangeSubscription;
   LocationData _currentLocation;
   LatLng _center;
-  Set<Marker> _markers = Set<Marker>();
 
   @override
   void initState() {
@@ -104,8 +104,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget _mapView() {
     return AppScaffold(
       title: AppStrings.appTitle,
-      // todo: add userEmail back to arguments list
-      drawer: LocationOnAppDrawer(),
+      drawer: LocationOnAppDrawer(userEmail: widget.userEmail),
       body: StreamBuilder(
         stream: widget._db.getAllAvailableBikes(),
         builder: (context, snapshot) {
@@ -135,13 +134,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _pushBikeDetails(documentID) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BikeDetailsScreen(
-          documentID: documentID,
-        ),
-      ),
-    );
+    Navigator.pushNamed(context, BikeDetailsScreen.routeName,
+        arguments: ScreenArguments(documentID: documentID));
   }
 }

@@ -1,8 +1,8 @@
-import 'package:bike_kollective/screens/active_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:bike_kollective/screens/active_screen.dart';
+import 'package:bike_kollective/components/screen_arguments.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'loading_screen.dart';
-import '../app/app.dart';
 import '../components/app_scaffold.dart';
 import '../components/size_calculator.dart';
 import '../services/database_manager.dart';
@@ -10,10 +10,12 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class BikeDetailsScreen extends StatefulWidget {
-  BikeDetailsScreen({Key key, this.documentID}) : super(key: key);
+  static const routeName = 'bikeDetails';
 
   final String documentID;
   final DatabaseManager _db = DatabaseManager();
+
+  BikeDetailsScreen({Key key, this.documentID}) : super(key: key);
 
   @override
   _BikeDetailsScreenState createState() => _BikeDetailsScreenState();
@@ -155,12 +157,13 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
   }
 
   void _pushActiveRide(documentID) {
-    Navigator.pushNamed(
+    Navigator.pushNamedAndRemoveUntil(
       context,
       ActiveScreen.routeName,
+      (route) => false,
       arguments: ScreenArguments(
-        _bike,
-        documentID,
+        bikeDB: _bike,
+        documentID: documentID,
       ),
     );
   }
