@@ -6,13 +6,13 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationOffAppDrawer extends StatelessWidget {
-  // todo: add back userEmail named parameter
-  LocationOffAppDrawer({Key key}) : super(key: key);
-
   static const appLogoPath = 'lib/assets/images/app_logo.png';
-  final AuthenticationManager _auth = AuthenticationManager();
   // todo: change back to final
-  static const userEmail = 'testuser@test.com';
+  final String userEmail;
+  final AuthenticationManager _auth = AuthenticationManager();
+
+  // todo: add back userEmail named parameter
+  LocationOffAppDrawer({Key key, this.userEmail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,8 @@ class LocationOffAppDrawer extends StatelessWidget {
   }
 
   Widget _email() {
-    return Text(userEmail);
+    return userEmail != null ? Text(userEmail) : Text('');
+    // return Text(userEmail);
   }
 
   Widget _logoutTile(BuildContext context) {
@@ -59,8 +60,8 @@ class LocationOffAppDrawer extends StatelessWidget {
       ),
       title: Text('${AppStrings.appDrawerLogoutLabel}'),
       onTap: () {
-        // _logout();
-        // _pushLogin(context);
+        _logout();
+        _pushLogin(context);
       },
     );
   }
@@ -69,10 +70,14 @@ class LocationOffAppDrawer extends StatelessWidget {
     return await _auth.signOut();
   }
 
+  // void _pushLogin(BuildContext context) {
+  //   Navigator.pushAndRemoveUntil(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => LoginScreen()),
+  //       (Route<dynamic> route) => false);
+  // }
   void _pushLogin(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginScreen.routeName, (route) => false);
   }
 }

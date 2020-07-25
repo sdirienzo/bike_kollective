@@ -1,3 +1,4 @@
+import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'location_request_screen.dart';
@@ -5,10 +6,11 @@ import 'loading_screen.dart';
 import 'map_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.userEmail}) : super(key: key);
+  static const routeName = 'home';
 
-  // todo: change back to final
-  var userEmail;
+  final String userEmail;
+
+  HomeScreen({Key key, this.userEmail}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -76,11 +78,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return LoadingScreen();
     } else if (_locationServiceStatus &&
         _locationPermissionStatus == PermissionStatus.granted) {
-      // todo: add back user email to arguments list
-      return MapScreen();
+      return MapScreen(userEmail: widget.userEmail);
     } else {
-      // todo: add userEmail back to arguments list
       return LocationRequestScreen(
+          userEmail: widget.userEmail,
           locationServiceEnabled: _locationServiceStatus);
     }
   }

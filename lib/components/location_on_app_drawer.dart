@@ -1,3 +1,5 @@
+import 'package:bike_kollective/screens/addBike_screen.dart';
+import 'package:bike_kollective/screens/list_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/login_screen.dart';
 import '../services/authentication_manager.dart';
@@ -6,13 +8,13 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationOnAppDrawer extends StatelessWidget {
-  // todo: add back userEmail named parameter
-  LocationOnAppDrawer({Key key}) : super(key: key);
-
   static const appLogoPath = 'lib/assets/images/app_logo.png';
-  final AuthenticationManager _auth = AuthenticationManager();
   // todo: change back to final
-  static const userEmail = 'testuser@test.com';
+  final String userEmail;
+  final AuthenticationManager _auth = AuthenticationManager();
+
+  // todo: add back userEmail named parameter
+  LocationOnAppDrawer({Key key, this.userEmail}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,8 @@ class LocationOnAppDrawer extends StatelessWidget {
   }
 
   Widget _email() {
-    return Text(userEmail);
+    return userEmail != null ? Text(userEmail) : Text('');
+    // return Text(userEmail);
   }
 
   Widget _bikesTile(BuildContext context) {
@@ -61,7 +64,7 @@ class LocationOnAppDrawer extends StatelessWidget {
       ),
       title: Text('${AppStrings.appDrawerBikesLabel}'),
       onTap: () {
-        // _pushBikeList(context);
+        _pushBikeList(context);
       },
     );
   }
@@ -87,8 +90,8 @@ class LocationOnAppDrawer extends StatelessWidget {
       ),
       title: Text('${AppStrings.appDrawerLogoutLabel}'),
       onTap: () {
-        // _logout();
-        // _pushLogin(context);
+        _logout();
+        _pushLogin(context);
       },
     );
   }
@@ -99,17 +102,21 @@ class LocationOnAppDrawer extends StatelessWidget {
 
   // Need to update once bike list screen is complete
   void _pushBikeList(BuildContext context) {
-    Navigator.pushNamed(context, '/list');
+    Navigator.pushNamed(context, ListScreen.routeName);
   }
 
   void _pushAddBike(BuildContext context) {
-    Navigator.pushNamed(context, '/add');
+    Navigator.pushNamed(context, AddBikeScreen.routeName);
   }
 
+  // void _pushLogin(BuildContext context) {
+  //   Navigator.pushAndRemoveUntil(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => LoginScreen()),
+  //       (Route<dynamic> route) => false);
+  // }
   void _pushLogin(BuildContext context) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (Route<dynamic> route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginScreen.routeName, (route) => false);
   }
 }

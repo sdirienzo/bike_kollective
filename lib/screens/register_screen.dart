@@ -6,10 +6,12 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key key}) : super(key: key);
-
+  static const routeName = 'register';
   static const appLogoPath = 'lib/assets/images/app_logo.png';
+
   final AuthenticationManager auth = new AuthenticationManager();
+
+  RegisterScreen({Key key}) : super(key: key);
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -17,11 +19,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  var _scaffoldContext;
-  var _email;
-  var _password;
-  var _userId;
-  var _error;
+  var _scaffoldContext, _email, _password, _userId, _error;
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +193,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void pushLogin() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    Navigator.pushNamed(context, LoginScreen.routeName);
   }
 }

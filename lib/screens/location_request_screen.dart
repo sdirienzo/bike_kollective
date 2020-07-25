@@ -8,15 +8,13 @@ import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
 class LocationRequestScreen extends StatelessWidget {
-  // todo: add back userEmail named parameter
-  LocationRequestScreen({Key key, this.locationServiceEnabled})
-      : super(key: key);
-
-  // todo: change back to final
-  String userEmail;
+  final String userEmail;
   final bool locationServiceEnabled;
   final LatLng _center = const LatLng(39.8283, -98.5795);
   GoogleMapController _mapController;
+
+  LocationRequestScreen({Key key, this.userEmail, this.locationServiceEnabled})
+      : super(key: key);
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -26,8 +24,7 @@ class LocationRequestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: AppStrings.appTitle,
-      // todo: add userEmail back to arguments list
-      drawer: LocationOffAppDrawer(),
+      drawer: LocationOffAppDrawer(userEmail: userEmail),
       body: SafeArea(
         child: Column(
           children: <Widget>[

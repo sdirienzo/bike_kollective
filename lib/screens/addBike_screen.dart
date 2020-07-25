@@ -5,14 +5,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path/path.dart' as Path;  
+import 'package:path/path.dart' as Path;
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
 import 'package:geolocator/geolocator.dart';
 
-
 class AddBikeScreen extends StatefulWidget {
-  AddBikeScreen({Key key,}) : super(key: key);
+  static const routeName = 'add';
+
+  AddBikeScreen({Key key}) : super(key: key);
 
   @override
   _AddBikeScreenState createState() => _AddBikeScreenState();
@@ -23,12 +24,11 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   final firestoreInstance = Firestore.instance;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
 
-
   Position _currentPosition;
 
   File _image;
   final picker = ImagePicker();
-  String _uploadedFileURL;   
+  String _uploadedFileURL;
 
   // got this function at https://stackoverflow.com/a/60735956/13923874
   Future<File> fixExifRotation(String imagePath) async {
@@ -42,7 +42,6 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
 
     //final GoogleSignIn _googleSignIn = GoogleSignIn();
     //final FirebaseAuth _auth = FirebaseAuth.instance;
-
 
     // Let's check for the image size
     // This will be true also for upside-down photos but it's ok for me
@@ -82,20 +81,19 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   }
 
   //function to upload file. From https://www.c-sharpcorner.com/article/upload-image-file-to-firebase-storage-using-flutter/
-  Future uploadFile() async {    
-    StorageReference storageReference = FirebaseStorage.instance    
-        .ref()    
-        .child('bikes/${Path.basename(_image.path)}}');    
-    StorageUploadTask uploadTask = storageReference.putFile(_image);    
-    await uploadTask.onComplete;    
-    print('File Uploaded');    
-    storageReference.getDownloadURL().then((fileURL) {    
-      setState(() {    
-        _uploadedFileURL = fileURL;    
-      });    
-    });    
-  }  
-
+  Future uploadFile() async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('bikes/${Path.basename(_image.path)}}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    storageReference.getDownloadURL().then((fileURL) {
+      setState(() {
+        _uploadedFileURL = fileURL;
+      });
+    });
+  }
 
   // function to take and get picture from camera
   Future getCamera(BuildContext context) async {
@@ -133,30 +131,32 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
 
   // pop-up to pic between camera and gallery, then call each of those functions
   Future<void> _showChoiceDialog() {
-    return showDialog(context: context,builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Pick One"),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children:<Widget>[
-              GestureDetector(
-                child: Text("Camera"),
-                onTap: () {
-                  getCamera(context);
-                },
-              ), 
-              Padding(padding: EdgeInsets.all(8.0)),
-              GestureDetector(
-                child: Text("Gallery"),
-                onTap: () {
-                  getGallery(context);
-                },
-              )
-            ],
-          ), 
-        ),
-      );
-    });
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Pick One"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: Text("Camera"),
+                    onTap: () {
+                      getCamera(context);
+                    },
+                  ),
+                  Padding(padding: EdgeInsets.all(8.0)),
+                  GestureDetector(
+                    child: Text("Gallery"),
+                    onTap: () {
+                      getGallery(context);
+                    },
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   // alert pop-up asking for a bike picture
@@ -202,59 +202,56 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                     hint: Text('Select Type of Bike'),
                     validators: [FormBuilderValidators.required()],
                     items: ['Road', 'Commuting', 'BMX']
-                      .map((bikeType) => DropdownMenuItem(
-                        value: bikeType,
-                        child: Text("$bikeType")
-                    )).toList(),
+                        .map((bikeType) => DropdownMenuItem(
+                            value: bikeType, child: Text("$bikeType")))
+                        .toList(),
                   ),
                   FormBuilderDropdown(
                     attribute: "bikeSize",
                     hint: Text('Select Size of Bike'),
                     validators: [FormBuilderValidators.required()],
                     items: ['Small', 'Medium', 'Large']
-                      .map((bikeSize) => DropdownMenuItem(
-                        value: bikeSize,
-                        child: Text("$bikeSize")
-                    )).toList(),
+                        .map((bikeSize) => DropdownMenuItem(
+                            value: bikeSize, child: Text("$bikeSize")))
+                        .toList(),
                   ),
                   FormBuilderTextField(
                     attribute: "bikeCombo",
-                    decoration: InputDecoration(labelText: "Combo of Bike Lock"),
+                    decoration:
+                        InputDecoration(labelText: "Combo of Bike Lock"),
                     validators: [
                       FormBuilderValidators.required(),
                     ],
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top:30.0, bottom:30.0),
+                    margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
                     child: _image == null
-                  ? IconButton(
-                      icon: Icon(
-                              Icons.add_a_photo,
-                              color: Colors.blue,
-                              size: 60.0
-                            ),
-                      onPressed: _showChoiceDialog,
-                      
-                    )  
-                  //: Image.file(_image,),
-                  : Stack(
-                      children: <Widget>[
-                          Image.file(_image,),
-                          Positioned(
-                            top: 5, right: 5, //give the values according to your requirement
-                            child: IconButton(
-                              icon: Icon(Icons.delete_outline,
-                                    color: Colors.red
-                                    ),
-                              onPressed: () {
-                                setState(() {
-                                _image = null;
-                                });
-                              },
-                            )
+                        ? IconButton(
+                            icon: Icon(Icons.add_a_photo,
+                                color: Colors.blue, size: 60.0),
+                            onPressed: _showChoiceDialog,
+                          )
+                        //: Image.file(_image,),
+                        : Stack(
+                            children: <Widget>[
+                              Image.file(
+                                _image,
+                              ),
+                              Positioned(
+                                  top: 5,
+                                  right:
+                                      5, //give the values according to your requirement
+                                  child: IconButton(
+                                    icon: Icon(Icons.delete_outline,
+                                        color: Colors.red),
+                                    onPressed: () {
+                                      setState(() {
+                                        _image = null;
+                                      });
+                                    },
+                                  )),
+                            ],
                           ),
-                      ],
-                    ),
                   ),
                   Container(
                     child: RaisedButton(
@@ -263,12 +260,15 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                         if (_fbKey.currentState.saveAndValidate()) {
                           if (_image != null) {
                             // upload file to firebase storage
-                            uploadFile();                          
-                            
+                            uploadFile();
+
                             // store map elements as individual vars to send to firebase
-                            var inputType = _fbKey.currentState.value.values.elementAt(0);
-                            var inputSize = _fbKey.currentState.value.values.elementAt(1);
-                            var inputCombo = _fbKey.currentState.value.values.elementAt(2);
+                            var inputType =
+                                _fbKey.currentState.value.values.elementAt(0);
+                            var inputSize =
+                                _fbKey.currentState.value.values.elementAt(1);
+                            var inputCombo =
+                                _fbKey.currentState.value.values.elementAt(2);
                             // get location and store lat/long in variables
                             getCurrentLocation();
                             var inputLat = _currentPosition.latitude;
@@ -277,34 +277,32 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                             var _documentID;
 
                             // Add data to Firestore
-                            firestoreInstance.collection("bikes").add(
-                            {
-                              "checkedOut" : false,
-                              "type" : inputType,
-                              "size" : inputSize,
-                              "combination" : inputCombo,
-                              "latitude" : inputLat,
-                              "longitude" : inputLng,
-                              "image" : _uploadedFileURL,
-                            }).then((value){
+                            firestoreInstance.collection("bikes").add({
+                              "checkedOut": false,
+                              "type": inputType,
+                              "size": inputSize,
+                              "combination": inputCombo,
+                              "latitude": inputLat,
+                              "longitude": inputLng,
+                              "image": _uploadedFileURL,
+                            }).then((value) {
                               _documentID = value.documentID;
                             });
-                            
+
                             if (_documentID != 0) {
                               Navigator.pop(context);
                             }
-                          } 
+                          }
                           if (_image == null) {
                             _showPictureDialog();
                           }
-                          
                         }
                       },
                     ),
                   ),
                 ],
               ),
-            ),  
+            ),
           ],
         ),
       ),
