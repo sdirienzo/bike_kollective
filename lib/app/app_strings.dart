@@ -1,6 +1,7 @@
 class AppStrings {
   /// App-wide strings
   static const appTitle = 'BIKE KOLLECTIVE';
+  static const bikeCollectionKey = 'bikes';
   static const bikeCheckedOutKey = 'checkedOut';
   static const bikeCombinationKey = 'combination';
   static const bikeImageKey = 'image';
@@ -9,6 +10,11 @@ class AppStrings {
   static const bikeSizeKey = 'size';
   static const bikeTypeKey = 'type';
   static const bikeRatingKey = 'rating';
+  static const userCollectionKey = 'users';
+  static const userIdKey = 'uid';
+  static const userEmailKey = 'email';
+  static const userActiveRideKey = 'activeRide';
+  static const userAccountDisabledKey = 'accountDisabled';
 
   /// AppDrawer/Sidebar strings
   static const appDrawerBikesLabel = 'Bikes';
