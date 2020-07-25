@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login_screen.dart';
 import '../components/size_calculator.dart';
 import '../services/authentication_manager.dart';
+import '../services/database_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
@@ -9,7 +11,8 @@ class RegisterScreen extends StatefulWidget {
   static const routeName = 'register';
   static const appLogoPath = 'lib/assets/images/app_logo.png';
 
-  final AuthenticationManager auth = new AuthenticationManager();
+  final AuthenticationManager _auth = new AuthenticationManager();
+  final DatabaseManager _db = new DatabaseManager();
 
   RegisterScreen({Key key}) : super(key: key);
 
@@ -77,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           labelText: '${AppStrings.emailFieldLabel}',
         ),
         validator: (value) {
-          return validateEmail(value);
+          return _validateEmail(value);
         },
         onSaved: (value) {
           _email = value.trim();
@@ -94,7 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         labelText: '${AppStrings.passwordFieldLabel}',
       ),
       validator: (value) {
-        return validatePassword(value);
+        return _validatePassword(value);
       },
       onSaved: (value) {
         _password = value.trim();
@@ -114,8 +117,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           onPressed: () async {
             if (_formKey.currentState.validate()) {
               _formKey.currentState.save();
-              submitRegistration().then((value) {
-                proceedWithRegistrationResults();
+              _submitRegistration().then((value) {
+                _proceedWithRegistrationResults();
               });
             }
           },
@@ -129,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: FlatButton(
         child: Text('${AppStrings.loginButtonLabel}'),
         onPressed: () {
-          pushLogin();
+          _pushLogin();
         },
       ),
     );
@@ -143,24 +146,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  String validateEmail(String value) {
+  String _validateEmail(String value) {
     return value.isEmpty ? '${AppStrings.emailFieldHint}' : null;
   }
 
-  String validatePassword(String value) {
+  String _validatePassword(String value) {
     return value.isEmpty ? '${AppStrings.passwordFieldHint}' : null;
   }
 
-  Future<void> submitRegistration() async {
+  Future<void> _submitRegistration() async {
     // todo: revisit to determine if this is best way to implement
     try {
-      _userId = await widget.auth.register(_email, _password);
+      _userId = await widget._auth.register(_email, _password);
     } catch (e) {
       _error = e.code;
     }
   }
 
-  void proceedWithRegistrationResults() {
+  Future<DocumentReference> _addUserToDB() async {
+    return await widget._db.addUser(_userId, _email);
+  }
+
+  void _proceedWithRegistrationResults() {
     if (_userId == null) {
       switch (_error) {
         case AppStrings.invalidEmailErrorCode:
@@ -188,11 +195,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _registerErrorSnackBar(AppStrings.unexpectedErrorMessage));
       }
     } else {
-      pushLogin();
+      _addUserToDB().then((result) {
+        _pushLogin();
+      });
     }
   }
 
-  void pushLogin() {
+  void _pushLogin() {
     Navigator.pushNamed(context, LoginScreen.routeName);
   }
 }
