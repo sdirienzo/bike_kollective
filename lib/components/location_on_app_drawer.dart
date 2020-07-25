@@ -9,11 +9,10 @@ import '../app/app_strings.dart';
 
 class LocationOnAppDrawer extends StatelessWidget {
   static const appLogoPath = 'lib/assets/images/app_logo.png';
-  // todo: change back to final
+
   final String userEmail;
   final AuthenticationManager _auth = AuthenticationManager();
 
-  // todo: add back userEmail named parameter
   LocationOnAppDrawer({Key key, this.userEmail}) : super(key: key);
 
   @override
@@ -53,7 +52,6 @@ class LocationOnAppDrawer extends StatelessWidget {
 
   Widget _email() {
     return userEmail != null ? Text(userEmail) : Text('');
-    // return Text(userEmail);
   }
 
   Widget _bikesTile(BuildContext context) {
@@ -100,7 +98,6 @@ class LocationOnAppDrawer extends StatelessWidget {
     return await _auth.signOut();
   }
 
-  // Need to update once bike list screen is complete
   void _pushBikeList(BuildContext context) {
     Navigator.pushNamed(context, ListScreen.routeName);
   }
@@ -109,12 +106,6 @@ class LocationOnAppDrawer extends StatelessWidget {
     Navigator.pushNamed(context, AddBikeScreen.routeName);
   }
 
-  // void _pushLogin(BuildContext context) {
-  //   Navigator.pushAndRemoveUntil(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => LoginScreen()),
-  //       (Route<dynamic> route) => false);
-  // }
   void _pushLogin(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(
         context, LoginScreen.routeName, (route) => false);
