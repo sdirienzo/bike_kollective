@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<DocumentReference> _addUserToDB() async {
+  Future<void> _addUserToDB() async {
     return await widget._db.addUser(_userId, _email);
   }
 
