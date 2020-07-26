@@ -41,5 +41,9 @@ class AppStyles {
 
   static final bikeDetailsPadding = 0.04;
   static final bikeDetailsImageHeight = 0.2;
+  static final bikeDetailsStarSize = 0.05;
   static final checkoutButtonPadding = 0.04;
+
+  static final bikeDetailsStarColor = Colors.black;
+  static final bikeDetailsStarBorderColor = Colors.black;
 }

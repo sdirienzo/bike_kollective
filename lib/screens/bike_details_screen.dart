@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/screens/active_screen.dart';
 import 'package:bike_kollective/components/screen_arguments.dart';
+import 'package:bike_kollective/services/authentication_manager.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'loading_screen.dart';
 import '../components/app_scaffold.dart';
 import '../components/size_calculator.dart';
@@ -13,6 +15,7 @@ class BikeDetailsScreen extends StatefulWidget {
   static const routeName = 'bikeDetails';
 
   final String documentID;
+  final AuthenticationManager _auth = AuthenticationManager();
   final DatabaseManager _db = DatabaseManager();
 
   BikeDetailsScreen({Key key, this.documentID}) : super(key: key);
@@ -23,30 +26,48 @@ class BikeDetailsScreen extends StatefulWidget {
 
 class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
   bool _isLoaded = false;
+  String _userId;
   DocumentSnapshot _bike;
   Image _bikeImage;
   BuildContext _scaffoldContext;
 
   @override
   void initState() {
-    _getBikeDetails().then((result) {
-      _bikeImage = Image.network(_bike['${AppStrings.bikeImageKey}']);
-      _bikeImage.image
-          .resolve(ImageConfiguration())
-          .addListener(ImageStreamListener((info, call) {
-        setState(() {
-          _isLoaded = true;
-        });
-      }));
+    _getUserId().then((getUserResult) {
+      _getBikeDetails().then((getBikeResult) {
+        _bikeImage = Image.network(_bike['${AppStrings.bikeImageKey}']);
+        _bikeImage.image
+            .resolve(ImageConfiguration())
+            .addListener(ImageStreamListener((info, call) {
+          setState(() {
+            _isLoaded = true;
+          });
+        }));
+      });
     });
     super.initState();
   }
 
+  Future<void> _getUserId() async {
+    _userId = await widget._auth.getCurrentUserId();
+    // setState(() {
+    //   _userId = userId;
+    // });
+    return;
+  }
+
   Future<void> _getBikeDetails() async {
-    var bike = await widget._db.getBike(widget.documentID);
-    setState(() {
-      _bike = bike;
-    });
+    _bike = await widget._db.getBike(widget.documentID);
+    // setState(() {
+    //   _bike = bike;
+    // });
+    return;
+  }
+
+  double _getRating() {
+    return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
+        ? _bike['${AppStrings.bikeRatingKey}']
+        : 0.0;
   }
 
   @override
@@ -79,10 +100,9 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
         child: ListView(
           children: <Widget>[
             _image(),
-            // _rating(),
+            _rating(),
             _size(),
             _type(),
-            // _description(),
             _checkoutButton(),
           ],
         ),
@@ -92,6 +112,27 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   Widget _image() {
     return _bikeImage;
+  }
+
+  Widget _rating() {
+    return Padding(
+      padding: EdgeInsets.only(top: sizeCalculator(context, 0.04)),
+      child: Center(
+        child: SmoothStarRating(
+          isReadOnly: true,
+          allowHalfRating: true,
+          starCount: 5,
+          size: sizeCalculator(context, AppStyles.bikeDetailsStarSize),
+          spacing: 2.0,
+          filledIconData: Icons.star,
+          halfFilledIconData: Icons.star_half,
+          defaultIconData: Icons.star_border,
+          color: AppStyles.bikeDetailsStarColor,
+          borderColor: AppStyles.bikeDetailsStarBorderColor,
+          rating: _getRating(),
+        ),
+      ),
+    );
   }
 
   Widget _size() {
@@ -148,12 +189,23 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
       Scaffold.of(_scaffoldContext).showSnackBar(
           _checkOutErrorSnackBar(AppStrings.bikeCheckedOutErrorMessage));
     } else {
-      _pushActiveRide(_bike.documentID);
+      _startRide(_userId, _bike.documentID).then((result) {
+        _pushActiveRide(_bike.documentID);
+      });
     }
   }
 
   bool _isBikeCheckedOut() {
     return _bike['${AppStrings.bikeCheckedOutKey}'];
+  }
+
+  Future<void> _startRide(String userId, String bikeId) {
+    var startTime = DateTime.now();
+    return widget._db.checkOutBike(bikeId).then((result) {
+      widget._db.startActiveRide(userId, bikeId, startTime).then((activeRide) {
+        widget._db.addUserActiveRide(userId, activeRide.documentID);
+      });
+    });
   }
 
   void _pushActiveRide(documentID) {

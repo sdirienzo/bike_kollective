@@ -1,6 +1,8 @@
 class AppStrings {
   /// App-wide strings
   static const appTitle = 'BIKE KOLLECTIVE';
+
+  /// Firebase DB Bikes strings
   static const bikeCollectionKey = 'bikes';
   static const bikeCheckedOutKey = 'checkedOut';
   static const bikeCombinationKey = 'combination';
@@ -10,8 +12,16 @@ class AppStrings {
   static const bikeSizeKey = 'size';
   static const bikeTypeKey = 'type';
   static const bikeRatingKey = 'rating';
+
+  /// Firebase DB Rides strings
+  static const rideCollectionKey = 'rides';
+  static const rideUserIdKey = 'userId';
+  static const rideBikeIdKey = 'bikeId';
+  static const rideStartTimeKey = 'startTime';
+  static const rideEndTimeKey = 'endTime';
+
+  /// Firebase DB Users strings
   static const userCollectionKey = 'users';
-  static const userIdKey = 'uid';
   static const userEmailKey = 'email';
   static const userActiveRideKey = 'activeRide';
   static const userAccountDisabledKey = 'accountDisabled';
