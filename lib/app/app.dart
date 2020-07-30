@@ -1,6 +1,7 @@
+import 'package:bike_kollective/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/components/router.dart';
-import 'package:bike_kollective/screens/login_screen.dart';
+import 'package:bike_kollective/screens/list_screen.dart';
 import 'app_strings.dart';
 
 class MyApp extends StatelessWidget {

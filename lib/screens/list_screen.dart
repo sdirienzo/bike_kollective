@@ -1,11 +1,18 @@
 import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:bike_kollective/screens/bike_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
+import 'loading_screen.dart';
+import '../services/database_manager.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
+
 
 class ListScreen extends StatefulWidget {
   static const routeName = 'list';
+  final DatabaseManager _db = DatabaseManager();
+
 
   ListScreen({Key key}) : super(key: key);
 
@@ -14,33 +21,7 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  final databaseInstance = Firestore.instance;
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
-  Position _currentPosition;
-
-  String bikeImgURL, bikeCombo;
-
-  String uid = "BBNBYHQwq3aWriNlAc9S";
-
-  getCurrentLocation() {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
-  Future getData() async {
-    QuerySnapshot snapshot =
-        await databaseInstance.collection("bikes").getDocuments();
-
-    return snapshot.documents;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,35 +30,41 @@ class _ListScreenState extends State<ListScreen> {
           title: Text('Bike List'),
         ),
         body: Container(
-            child: FutureBuilder(
-                future: getData(),
-                builder: (_, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
+            child: StreamBuilder(
+              stream: widget._db.getAllAvailableBikes(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                   return ListView.builder(
+                      itemCount:  snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot bike = snapshot.data.documents[index];
+                        
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                bike.data["image"]),
+                          ),
+                          title: Text(bike.data["size"] +
+                              " " +
+                              bike.data["type"]),
+                          onTap: () {
+                            _pushBikeDetails(bike.documentID); 
+                          },
+                        );
+                      }
                     );
-                  } else {
-                    return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (_, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  snapshot.data[index].data["image"]),
-                            ),
-                            title: Text(snapshot.data[index].data["size"] +
-                                " " +
-                                snapshot.data[index].data["type"]),
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, BikeDetailsScreen.routeName,
-                                  arguments: ScreenArguments(
-                                      documentID:
-                                          snapshot.data[index].documentID));
-                            },
-                          );
-                        });
-                  }
-                })));
+                } else {
+                  return LoadingScreen();
+                }
+              },
+            ),   
+        )
+    );
   }
+  
+  void _pushBikeDetails(documentID) {
+    Navigator.pushNamed(context, BikeDetailsScreen.routeName,
+        arguments: ScreenArguments(documentID: documentID));
+  }
+
 }

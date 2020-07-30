@@ -38,6 +38,8 @@ class Router {
       case RateScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => RateScreen(documentID: args.documentID));
+      case ListScreen.routeName:
+        return MaterialPageRoute(builder: (context) => ListScreen());
     }
   }
 }
