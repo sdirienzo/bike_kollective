@@ -50,17 +50,11 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   Future<void> _getUserId() async {
     _userId = await widget._auth.getCurrentUserId();
-    // setState(() {
-    //   _userId = userId;
-    // });
     return;
   }
 
   Future<void> _getBikeDetails() async {
     _bike = await widget._db.getBike(widget.documentID);
-    // setState(() {
-    //   _bike = bike;
-    // });
     return;
   }
 
@@ -198,6 +192,10 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
   bool _isBikeCheckedOut() {
     return _bike['${AppStrings.bikeCheckedOutKey}'];
   }
+
+  // bool _isUserWithinOneHundredMetersOfBike() {
+
+  // }
 
   Future<void> _startRide(String userId, String bikeId) {
     var startTime = DateTime.now();
