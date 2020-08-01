@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:bike_kollective/screens/active_screen.dart';
 import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:bike_kollective/services/authentication_manager.dart';
@@ -13,6 +16,7 @@ import '../app/app_strings.dart';
 
 class BikeDetailsScreen extends StatefulWidget {
   static const routeName = 'bikeDetails';
+  static const maxDistanceInMeters = 100;
 
   final String documentID;
   final AuthenticationManager _auth = AuthenticationManager();
@@ -26,6 +30,9 @@ class BikeDetailsScreen extends StatefulWidget {
 
 class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
   bool _isLoaded = false;
+  Location _location = Location();
+  LocationData _currentLocation;
+  StreamSubscription _locChangeSubscription;
   String _userId;
   DocumentSnapshot _bike;
   Image _bikeImage;
@@ -33,19 +40,39 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   @override
   void initState() {
-    _getUserId().then((getUserResult) {
-      _getBikeDetails().then((getBikeResult) {
-        _bikeImage = Image.network(_bike['${AppStrings.bikeImageKey}']);
-        _bikeImage.image
-            .resolve(ImageConfiguration())
-            .addListener(ImageStreamListener((info, call) {
-          setState(() {
-            _isLoaded = true;
-          });
-        }));
+    _initLocSubscription();
+    _getInitialLocation().then((initialLocResult) {
+      _getUserId().then((userResult) {
+        _getBikeDetails().then((bikeResult) {
+          _bikeImage = Image.network(_bike['${AppStrings.bikeImageKey}']);
+          _bikeImage.image
+              .resolve(ImageConfiguration())
+              .addListener(ImageStreamListener((info, call) {
+            setState(() {
+              _isLoaded = true;
+            });
+          }));
+        });
       });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _locChangeSubscription.cancel();
+    super.dispose();
+  }
+
+  void _initLocSubscription() {
+    _locChangeSubscription = _location.onLocationChanged.listen((newLoc) {
+      _currentLocation = newLoc;
+    });
+  }
+
+  Future<void> _getInitialLocation() async {
+    _currentLocation = await _location.getLocation();
+    return;
   }
 
   Future<void> _getUserId() async {
@@ -172,41 +199,62 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   Widget _checkOutErrorSnackBar(String errorMessage) {
     return SnackBar(
-      content: Text(errorMessage, textAlign: AppStyles.loginErrorTextAlignment),
-      backgroundColor: AppStyles.loginErrorBackgroundColor,
+      content:
+          Text(errorMessage, textAlign: AppStyles.checkOutErrorTextAlignment),
+      backgroundColor: AppStyles.checkOutErrorBackgroundColor,
     );
   }
 
-  // todo: add check for distance to bike
   void _submitCheckout() {
-    if (_isBikeCheckedOut()) {
-      Scaffold.of(_scaffoldContext).showSnackBar(
-          _checkOutErrorSnackBar(AppStrings.bikeCheckedOutErrorMessage));
-    } else {
-      _startRide(_userId, _bike.documentID).then((result) {
-        _pushActiveRide(_bike.documentID);
-      });
-    }
+    _isUserWithinMaxMetersOfBike().then((within) {
+      if (_isBikeCheckedOut()) {
+        Scaffold.of(_scaffoldContext).showSnackBar(
+            _checkOutErrorSnackBar(AppStrings.bikeCheckedOutErrorMessage));
+      } else if (!within) {
+        Scaffold.of(_scaffoldContext).showSnackBar(
+            _checkOutErrorSnackBar(AppStrings.bikeTooFarAwaryErrorMessage));
+      } else {
+        _startRide(_userId, _bike.documentID).then((rideID) {
+          _pushActiveRide(_bike.documentID, rideID);
+        });
+      }
+    });
   }
 
   bool _isBikeCheckedOut() {
     return _bike['${AppStrings.bikeCheckedOutKey}'];
   }
 
-  // bool _isUserWithinOneHundredMetersOfBike() {
+  Future<double> _getDistanceFromBike() async {
+    return await Geolocator().distanceBetween(
+        _currentLocation.latitude,
+        _currentLocation.longitude,
+        _bike['${AppStrings.bikeLatitudeKey}'],
+        _bike['${AppStrings.bikeLongitudeKey}']);
+  }
 
-  // }
+  Future<bool> _isUserWithinMaxMetersOfBike() {
+    return _getDistanceFromBike().then((distance) {
+      return distance <= BikeDetailsScreen.maxDistanceInMeters.toDouble();
+    });
+  }
 
-  Future<void> _startRide(String userId, String bikeId) {
+  Future<String> _startRide(String userId, String bikeId) {
     var startTime = DateTime.now();
-    return widget._db.checkOutBike(bikeId).then((result) {
-      widget._db.startActiveRide(userId, bikeId, startTime).then((activeRide) {
-        widget._db.addUserActiveRide(userId, activeRide.documentID);
+    return widget._db.checkOutBike(bikeId).then((checkOutResult) {
+      return widget._db
+          .startActiveRide(userId, bikeId, startTime)
+          .then((activeRide) {
+        return widget._db
+            .addUserActiveRide(userId, activeRide.documentID)
+            .then((addUserRideResult) {
+          return activeRide.documentID;
+        });
       });
     });
   }
 
-  void _pushActiveRide(documentID) {
+  void _pushActiveRide(documentID, rideID) {
     Navigator.pushNamedAndRemoveUntil(
       context,
       ActiveScreen.routeName,
@@ -214,6 +262,7 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
       arguments: ScreenArguments(
         bikeDB: _bike,
         documentID: documentID,
+        rideID: rideID,
       ),
     );
   }

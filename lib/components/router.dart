@@ -33,8 +33,11 @@ class Router {
                 BikeDetailsScreen(documentID: args.documentID));
       case ActiveScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) =>
-                ActiveScreen(bikeDB: args.bikeDB, documentID: args.documentID));
+            builder: (context) => ActiveScreen(
+                  bikeDB: args.bikeDB,
+                  documentID: args.documentID,
+                  rideID: args.rideID,
+                ));
       case RateScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => RateScreen(documentID: args.documentID));

@@ -12,12 +12,14 @@ class ActiveScreen extends StatefulWidget {
 
   final DocumentSnapshot bikeDB;
   final String documentID;
+  final String rideID;
 
-  ActiveScreen({
-    Key key,
-    @required this.bikeDB,
-    @required this.documentID,
-  }) : super(key: key);
+  ActiveScreen(
+      {Key key,
+      @required this.bikeDB,
+      @required this.documentID,
+      @required this.rideID})
+      : super(key: key);
 
   @override
   _ActiveScreenState createState() => _ActiveScreenState();
@@ -39,6 +41,7 @@ class _ActiveScreenState extends State<ActiveScreen> {
 
   @override
   void initState() {
+    print(widget.rideID);
     _bikeImage = Image.network(widget.bikeDB['${AppStrings.bikeImageKey}']);
     _bikeImage.image
         .resolve(ImageConfiguration())
