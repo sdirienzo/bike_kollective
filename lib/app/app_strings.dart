@@ -1,3 +1,5 @@
+import 'package:bike_kollective/screens/bike_details_screen.dart';
+
 class AppStrings {
   /// App-wide strings
   static const appTitle = 'BIKE KOLLECTIVE';
@@ -89,5 +91,5 @@ class AppStrings {
   static const bikeCheckedOutErrorMessage =
       'Bike is already checked out.  Please try a different bike';
   static const bikeTooFarAwaryErrorMessage =
-      'Bike is too far away.  Please try a closer bike';
+      'You must be within ${BikeDetailsScreen.maxDistanceInMeters} meters of a bike to check it out';
 }

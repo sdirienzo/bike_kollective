@@ -46,4 +46,7 @@ class AppStyles {
 
   static final bikeDetailsStarColor = Colors.black;
   static final bikeDetailsStarBorderColor = Colors.black;
+
+  static final checkOutErrorTextAlignment = TextAlign.center;
+  static final checkOutErrorBackgroundColor = Colors.red;
 }
