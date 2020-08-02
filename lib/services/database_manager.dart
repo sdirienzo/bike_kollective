@@ -13,6 +13,12 @@ class DatabaseManager {
     });
   }
 
+  Future<DocumentSnapshot> getUser(String uid) async {
+    return Firestore.instance
+        .document('${AppStrings.userCollectionKey}/$uid')
+        .get();
+  }
+
   Stream<QuerySnapshot> getAllAvailableBikes() {
     return Firestore.instance
         .collection('${AppStrings.bikeCollectionKey}')
@@ -32,10 +38,21 @@ class DatabaseManager {
         .updateData({'${AppStrings.bikeCheckedOutKey}': true});
   }
 
-  Future<void> checkInBike(String documentID) async {
+  Future<void> checkInBike(
+      String documentID, double latitude, double longitude) async {
     return Firestore.instance
         .document('${AppStrings.bikeCollectionKey}/$documentID')
-        .updateData({'${AppStrings.bikeCheckedOutKey}': false});
+        .updateData({
+      '${AppStrings.bikeCheckedOutKey}': false,
+      '${AppStrings.bikeLatitudeKey}': latitude,
+      '${AppStrings.bikeLongitudeKey}': longitude,
+    });
+  }
+
+  Future<DocumentSnapshot> getActiveRide(String documentID) async {
+    return Firestore.instance
+        .document('${AppStrings.rideCollectionKey}/$documentID')
+        .get();
   }
 
   Future<DocumentReference> startActiveRide(

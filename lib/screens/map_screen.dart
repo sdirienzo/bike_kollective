@@ -14,7 +14,7 @@ class MapScreen extends StatefulWidget {
   final String userEmail;
   final DatabaseManager _db = DatabaseManager();
 
-  MapScreen({Key key, this.userEmail}) : super(key: key);
+  MapScreen({Key key, @required this.userEmail}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -42,50 +42,6 @@ class _MapScreenState extends State<MapScreen> {
   void dispose() {
     _locChangeSubscription.cancel();
     super.dispose();
-  }
-
-  Future<void> _getInitialLocation() async {
-    var currentLocation = await _location.getLocation();
-    setState(() {
-      _currentLocation = currentLocation;
-      _center = LatLng(_currentLocation.latitude, _currentLocation.longitude);
-    });
-  }
-
-  void _updateLocationIndicator() async {
-    _mapController.getZoomLevel().then((level) {
-      CameraPosition position = CameraPosition(
-        zoom: level,
-        tilt: 0.0,
-        bearing: 0.0,
-        target: LatLng(
-          _currentLocation.latitude,
-          _currentLocation.longitude,
-        ),
-      );
-      _mapController.animateCamera(CameraUpdate.newCameraPosition(position));
-    });
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    _mapController = controller;
-  }
-
-  void _prepareMarkers(snapshot) {
-    _markers.clear();
-
-    snapshot.data.documents.forEach((bike) {
-      var markerId = MarkerId(bike.documentID);
-      _markers.add(
-        Marker(
-            markerId: markerId,
-            position: LatLng(bike['${AppStrings.bikeLatitudeKey}'],
-                bike['${AppStrings.bikeLongitudeKey}']),
-            onTap: () {
-              _pushBikeDetails(bike.documentID);
-            }),
-      );
-    });
   }
 
   @override
@@ -131,6 +87,50 @@ class _MapScreenState extends State<MapScreen> {
       ),
       markers: _markers,
     );
+  }
+
+  Future<void> _getInitialLocation() async {
+    var currentLocation = await _location.getLocation();
+    setState(() {
+      _currentLocation = currentLocation;
+      _center = LatLng(_currentLocation.latitude, _currentLocation.longitude);
+    });
+  }
+
+  void _updateLocationIndicator() async {
+    _mapController.getZoomLevel().then((level) {
+      CameraPosition position = CameraPosition(
+        zoom: level,
+        tilt: 0.0,
+        bearing: 0.0,
+        target: LatLng(
+          _currentLocation.latitude,
+          _currentLocation.longitude,
+        ),
+      );
+      _mapController.animateCamera(CameraUpdate.newCameraPosition(position));
+    });
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
+
+  void _prepareMarkers(snapshot) {
+    _markers.clear();
+
+    snapshot.data.documents.forEach((bike) {
+      var markerId = MarkerId(bike.documentID);
+      _markers.add(
+        Marker(
+            markerId: markerId,
+            position: LatLng(bike['${AppStrings.bikeLatitudeKey}'],
+                bike['${AppStrings.bikeLongitudeKey}']),
+            onTap: () {
+              _pushBikeDetails(bike.documentID);
+            }),
+      );
+    });
   }
 
   void _pushBikeDetails(documentID) {

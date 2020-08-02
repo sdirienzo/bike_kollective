@@ -21,8 +21,7 @@ class Router {
       case RegisterScreen.routeName:
         return MaterialPageRoute(builder: (context) => RegisterScreen());
       case HomeScreen.routeName:
-        return MaterialPageRoute(
-            builder: (context) => HomeScreen(userEmail: args.userEmail));
+        return MaterialPageRoute(builder: (context) => HomeScreen());
       case ListScreen.routeName:
         return MaterialPageRoute(builder: (context) => ListScreen());
       case AddBikeScreen.routeName:
@@ -34,9 +33,10 @@ class Router {
       case ActiveScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => ActiveScreen(
-                  bikeDB: args.bikeDB,
+                  userID: args.userID,
                   documentID: args.documentID,
                   rideID: args.rideID,
+                  bikeDB: args.bikeDB,
                 ));
       case RateScreen.routeName:
         return MaterialPageRoute(
