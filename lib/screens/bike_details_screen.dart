@@ -22,7 +22,7 @@ class BikeDetailsScreen extends StatefulWidget {
   final AuthenticationManager _auth = AuthenticationManager();
   final DatabaseManager _db = DatabaseManager();
 
-  BikeDetailsScreen({Key key, this.documentID}) : super(key: key);
+  BikeDetailsScreen({Key key, @required this.documentID}) : super(key: key);
 
   @override
   _BikeDetailsScreenState createState() => _BikeDetailsScreenState();
@@ -64,33 +64,6 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     super.dispose();
   }
 
-  void _initLocSubscription() {
-    _locChangeSubscription = _location.onLocationChanged.listen((newLoc) {
-      _currentLocation = newLoc;
-    });
-  }
-
-  Future<void> _getInitialLocation() async {
-    _currentLocation = await _location.getLocation();
-    return;
-  }
-
-  Future<void> _getUserId() async {
-    _userId = await widget._auth.getCurrentUserId();
-    return;
-  }
-
-  Future<void> _getBikeDetails() async {
-    _bike = await widget._db.getBike(widget.documentID);
-    return;
-  }
-
-  double _getRating() {
-    return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
-        ? _bike['${AppStrings.bikeRatingKey}']
-        : 0.0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return _viewToDisplay();
@@ -100,34 +73,34 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     if (_isLoaded == false) {
       return LoadingScreen();
     } else {
-      return AppScaffold(
-        title: '${AppStrings.bikeDetailsScreenTitle}',
-        drawer: null,
-        body: Builder(builder: (BuildContext context) {
-          _scaffoldContext = context;
-          return SafeArea(
-            child: _bikeDetails(),
-          );
-        }),
-      );
+      return _bikeDetails();
     }
   }
 
   Widget _bikeDetails() {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.all(
-            sizeCalculator(context, AppStyles.bikeDetailsPadding)),
-        child: ListView(
-          children: <Widget>[
-            _image(),
-            _rating(),
-            _size(),
-            _type(),
-            _checkoutButton(),
-          ],
-        ),
-      ),
+    return AppScaffold(
+      title: '${AppStrings.bikeDetailsScreenTitle}',
+      drawer: null,
+      body: Builder(builder: (BuildContext context) {
+        _scaffoldContext = context;
+        return SafeArea(
+          child: Container(
+            child: Padding(
+              padding: EdgeInsets.all(
+                  sizeCalculator(context, AppStyles.bikeDetailsPadding)),
+              child: ListView(
+                children: <Widget>[
+                  _image(),
+                  _rating(),
+                  _size(),
+                  _type(),
+                  _checkoutButton(),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
     );
   }
 
@@ -205,6 +178,33 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     );
   }
 
+  void _initLocSubscription() {
+    _locChangeSubscription = _location.onLocationChanged.listen((newLoc) {
+      _currentLocation = newLoc;
+    });
+  }
+
+  Future<void> _getInitialLocation() async {
+    _currentLocation = await _location.getLocation();
+    return;
+  }
+
+  Future<void> _getUserId() async {
+    _userId = await widget._auth.getCurrentUserId();
+    return;
+  }
+
+  Future<void> _getBikeDetails() async {
+    _bike = await widget._db.getBike(widget.documentID);
+    return;
+  }
+
+  double _getRating() {
+    return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
+        ? _bike['${AppStrings.bikeRatingKey}']
+        : 0.0;
+  }
+
   void _submitCheckout() {
     _isUserWithinMaxMetersOfBike().then((within) {
       if (_isBikeCheckedOut()) {
@@ -260,6 +260,7 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
       ActiveScreen.routeName,
       (route) => false,
       arguments: ScreenArguments(
+        userID: _userId,
         bikeDB: _bike,
         documentID: documentID,
         rideID: rideID,
