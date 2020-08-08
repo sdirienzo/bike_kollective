@@ -210,7 +210,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                     attribute: "bikeSize",
                     hint: Text('Select Size of Bike'),
                     validators: [FormBuilderValidators.required()],
-                    items: ['Small', 'Medium', 'Large']
+                    items: ['Small', 'Medium', 'Large', 'XL']
                         .map((bikeSize) => DropdownMenuItem(
                             value: bikeSize, child: Text("$bikeSize")))
                         .toList(),

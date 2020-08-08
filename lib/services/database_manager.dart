@@ -26,6 +26,34 @@ class DatabaseManager {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> searchAvailableBikes(String size, String type) {
+    if (size == 'Choose Size' && type == 'Choose Type') {
+      return Firestore.instance
+          .collection('${AppStrings.bikeCollectionKey}')
+          .where('${AppStrings.bikeCheckedOutKey}', isEqualTo: false)
+          .snapshots();
+    } else if (size == 'Choose Size' && type != 'Choose Type') {
+      return Firestore.instance
+          .collection('${AppStrings.bikeCollectionKey}')
+          .where('${AppStrings.bikeCheckedOutKey}', isEqualTo: false)
+          .where('${AppStrings.bikeTypeKey}', isEqualTo: type)
+          .snapshots();
+    } else if (size != 'Choose Size' && type == 'Choose Type') {
+      return Firestore.instance
+          .collection('${AppStrings.bikeCollectionKey}')
+          .where('${AppStrings.bikeCheckedOutKey}', isEqualTo: false)
+          .where('${AppStrings.bikeSizeKey}', isEqualTo: size)
+          .snapshots();
+    } else {
+      return Firestore.instance
+          .collection('${AppStrings.bikeCollectionKey}')
+          .where('${AppStrings.bikeCheckedOutKey}', isEqualTo: false)
+          .where('${AppStrings.bikeSizeKey}', isEqualTo: size)
+          .where('${AppStrings.bikeTypeKey}', isEqualTo: type)
+          .snapshots();
+    }
+  }
+
   Future<DocumentSnapshot> getBike(String documentID) async {
     return Firestore.instance
         .document('${AppStrings.bikeCollectionKey}/$documentID')
