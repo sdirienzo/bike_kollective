@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
@@ -201,8 +202,8 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   double _getRating() {
     return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
-        ? _bike['${AppStrings.bikeRatingKey}']
-        : 0.0;
+        ? _bike['${AppStrings.bikeRatingKey}'].double
+        : 0;
   }
 
   void _submitCheckout() {
