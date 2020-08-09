@@ -92,4 +92,7 @@ class AppStrings {
       'Bike is already checked out.  Please try a different bike';
   static const bikeTooFarAwaryErrorMessage =
       'You must be within ${BikeDetailsScreen.maxDistanceInMeters} meters of a bike to check it out';
+
+  /// Bike List screen strings
+  static const bikeListScreenTitle = 'BIKE LIST';
 }

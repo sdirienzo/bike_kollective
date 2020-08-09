@@ -201,7 +201,7 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
 
   double _getRating() {
     return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
-        ? _bike['${AppStrings.bikeRatingKey}']
+        ? _bike['${AppStrings.bikeRatingKey}'].toDouble()
         : 0.0;
   }
 

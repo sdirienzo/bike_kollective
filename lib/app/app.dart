@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: AppStrings.appTitle,
       theme: ThemeData(canvasColor: Colors.white),
       onGenerateRoute: Router.generateRoute,
-      initialRoute: ListScreen.routeName,
+      initialRoute: LoginScreen.routeName,
     );
   }
 }
