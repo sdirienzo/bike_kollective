@@ -49,4 +49,7 @@ class AppStyles {
 
   static final checkOutErrorTextAlignment = TextAlign.center;
   static final checkOutErrorBackgroundColor = Colors.red;
+
+  static final bikeListStarColor = Colors.black;
+  static final bikeListStarBorderColor = Colors.black;
 }
