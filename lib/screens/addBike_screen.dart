@@ -20,7 +20,7 @@ class AddBikeScreen extends StatefulWidget {
 }
 
 class _AddBikeScreenState extends State<AddBikeScreen> {
-  var _scaffoldContext, _email, _password, _userId, _error;
+  var _scaffoldContext;
   File _image;
   final picker = ImagePicker();
 
@@ -148,7 +148,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
             onPressed: () async {
               if (_fbKey.currentState.saveAndValidate()) {
                 if (_image != null) {
-                  uploadFile().then((value) => uploadJson());
+                  uploadFile();
                 }
                 if (_image == null) {
                   _noPhotoAlert();
@@ -202,7 +202,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
     storageReference.getDownloadURL().then((fileURL) {
       setState(() {
         uploadedFileURL = fileURL;
-        print(uploadedFileURL);
+        uploadJson();
       });
     });
   }
