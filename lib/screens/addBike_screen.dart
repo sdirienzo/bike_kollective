@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter/material.dart';
@@ -121,7 +120,26 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
     );
   }
 
-  Widget _noPhotoAltert() {}
+  void _noPhotoAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: new Text("Please take a landscape picture of the bike!"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget _submitButton() {
     return Container(
@@ -129,7 +147,12 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
             child: Text("upload photo"),
             onPressed: () async {
               if (_fbKey.currentState.saveAndValidate()) {
-                uploadFile().then((value) => uploadJson());
+                if (_image != null) {
+                  uploadFile().then((value) => uploadJson());
+                }
+                if (_image == null) {
+                  _noPhotoAlert();
+                }
               }
             }));
   }
@@ -137,9 +160,17 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   Future _getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
 
-    setState(() {
-      _image = File(pickedFile.path);
-    });
+    var image = File(pickedFile.path);
+    var decodedImage = await decodeImageFromList(image.readAsBytesSync());
+    if (decodedImage.height > decodedImage.width) {
+      _noPhotoAlert();
+      return;
+    }
+
+    if (pickedFile != null)
+      setState(() {
+        _image = File(pickedFile.path);
+      });
   }
 
   Future<void> _getLocation() async {
