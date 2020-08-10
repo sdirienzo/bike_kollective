@@ -96,4 +96,13 @@ class AppStrings {
 
   /// Bike List screen strings
   static const bikeListScreenTitle = 'BIKE LIST';
+
+  /// Active Ride screen strings
+  static const activeRideScreenTitle = 'ACTIVE RIDE';
+  static const checkinButtonLabel = 'Check In';
+
+  /// Rate screen strings
+  static const rateScreenTitle = 'RATE YOUR RIDE!';
+  static const ratePrompt = 'How was the Bike?';
+  static const rateButtonLabel = 'Submit';
 }
