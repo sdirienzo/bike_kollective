@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import '../app/app_styles.dart';
+import 'loading_screen.dart';
 
 class AddBikeScreen extends StatefulWidget {
   static const routeName = 'add';
