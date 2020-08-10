@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:bike_kollective/components/app_scaffold.dart';
 import 'package:bike_kollective/screens/rate_screen.dart';
 import 'package:bike_kollective/screens/loading_screen.dart';
 import 'package:bike_kollective/screens/location_request_screen.dart';
@@ -88,22 +89,28 @@ class _ActiveScreenState extends State<ActiveScreen>
           userEmail: _user['${AppStrings.userEmailKey}'],
           locationServiceEnabled: _locationServiceStatus);
     } else {
-      return _activeRide();
+      return _activeRideView();
     }
   }
 
-  Widget _activeRide() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Active Ride'),
-      ),
-      body: Center(
-        child: Column(children: <Widget>[
-          Text("Active Ride"),
-          _image(),
-          _combo(),
-          _checkInButton(),
-        ]),
+  Widget _activeRideView() {
+    return AppScaffold(
+      title: '${AppStrings.activeRideScreenTitle}',
+      drawer: null,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(
+              sizeCalculator(context, AppStyles.activeRidePadding)),
+          child: Container(
+            child: ListView(
+              children: <Widget>[
+                _image(),
+                _combo(),
+                _checkInButton(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -125,11 +132,18 @@ class _ActiveScreenState extends State<ActiveScreen>
   }
 
   Widget _checkInButton() {
-    return RaisedButton(
-      child: Text("Check In"),
-      onPressed: () {
-        _submitCheckIn();
-      },
+    return Padding(
+      padding: EdgeInsets.only(top: sizeCalculator(context, 0.04)),
+      child: SizedBox(
+        child: RaisedButton(
+          color: AppStyles.primaryButtonColor,
+          textColor: AppStyles.primaryButtonTextColor,
+          child: Text('${AppStrings.checkinButtonLabel}'),
+          onPressed: () {
+            _submitCheckIn();
+          },
+        ),
+      ),
     );
   }
 
@@ -204,7 +218,6 @@ class _ActiveScreenState extends State<ActiveScreen>
       RateScreen.routeName,
       (route) => false,
       arguments: ScreenArguments(
-        bikeDB: widget.bikeDB,
         documentID: widget.documentID,
       ),
     );
