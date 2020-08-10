@@ -1,4 +1,3 @@
-import 'package:bike_kollective/screens/addBike_screen.dart';
 import 'package:bike_kollective/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/components/router.dart';
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: AppStrings.appTitle,
       theme: ThemeData(canvasColor: Colors.white),
       onGenerateRoute: Router.generateRoute,
-      initialRoute: AddBikeScreen.routeName,
+      initialRoute: LoginScreen.routeName,
     );
   }
 }
