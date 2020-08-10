@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bike_kollective/screens/loading_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -7,7 +8,9 @@ import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import '../app/app_styles.dart';
-import 'loading_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 
 class AddBikeScreen extends StatefulWidget {
   static const routeName = 'add';
@@ -41,23 +44,30 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   double inputLat, inputLng, rating;
   int ratingNum;
 
+  bool _saving = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppStyles.primaryScaffoldBackgroundColor,
-      body: Builder(builder: (BuildContext context) {
-        _scaffoldContext = context;
-        return SafeArea(
-            child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _formBuilder(),
-              _addPhoto(),
-              _submitButton(),
-            ],
+      body: ModalProgressHUD(
+        progressIndicator: SpinKitWave(
+          color: Colors.black,
+          size: 100.0,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _formBuilder(),
+                _addPhoto(),
+                _submitButton(),
+              ],
+            ),
           ),
-        ));
-      }),
+        ),
+        inAsyncCall: _saving,
+      ),
     );
   }
 
@@ -194,6 +204,9 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
   }
 
   Future uploadFile() async {
+    setState(() {
+      _saving = true;
+    });
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child('bikes/${Path.basename(_image.path)}}');
@@ -223,10 +236,6 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
 
       // Add data to Firestore
       addBike();
-
-      if (_documentID != 0) {
-        Navigator.pop(context);
-      }
     });
   }
 
@@ -245,6 +254,10 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
     }).then((value) {
       print("Bike Added");
       _documentID = value.documentID;
+      setState(() {
+        _saving = false;
+      });
+      Navigator.pop(context);
     }).catchError((error) => print("Failed to add bike: $error"));
   }
 }
