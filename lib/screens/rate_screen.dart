@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bike_kollective/screens/home_screen.dart';
-import '../components/size_calculator.dart';
-import '../app/app_styles.dart';
-import '../app/app_strings.dart';
-import '../app/app.dart';
-import '../services/database_manager.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:bike_kollective/screens/home_screen.dart';
+import 'package:bike_kollective/components/app_scaffold.dart';
+import 'package:bike_kollective/components/size_calculator.dart';
+import 'package:bike_kollective/services/database_manager.dart';
+import 'package:bike_kollective/app/app_styles.dart';
+import 'package:bike_kollective/app/app_strings.dart';
 
 class RateScreen extends StatefulWidget {
   static const routeName = 'rate';
@@ -23,7 +23,8 @@ class RateScreen extends StatefulWidget {
 class _RateScreenState extends State<RateScreen> {
   final firestoreInstance = Firestore.instance;
 
-  double rating, numRating, newRating;
+  double rating, numRating;
+  double newRating = 0.0;
 
   DocumentSnapshot _bike;
   Image _bikeImage;
@@ -41,41 +42,71 @@ class _RateScreenState extends State<RateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rate Your Ride!'),
-      ),
-      body: Center(
-        child: Column(children: [
-          Text("How was the Bike?"),
-          rateBike(),
-          submitButton(),
-        ]),
-      ),
-    );
-  }
-
-  Widget rateBike() {
-    return Container(
-      child: SmoothStarRating(
-        rating: newRating,
-        isReadOnly: false,
-        size: 40,
-        filledIconData: Icons.star,
-        halfFilledIconData: Icons.star_half,
-        defaultIconData: Icons.star_border,
-        starCount: 5,
-        allowHalfRating: false,
-        spacing: 2.0,
-        onRated: (value) {
-          newRating = value;
-        },
+    return AppScaffold(
+      title: '${AppStrings.rateScreenTitle}',
+      body: SafeArea(
+        child: Padding(
+          padding:
+              EdgeInsets.all(sizeCalculator(context, AppStyles.ratePadding)),
+          child: Container(
+            child: ListView(
+              children: [
+                _prompt(),
+                _rateBike(),
+                _submitButton(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget submitButton() {
-    return RaisedButton(
+  Widget _prompt() {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: sizeCalculator(context, AppStyles.ratePromptPadding)),
+      child: Center(
+        child: Text(
+          '${AppStrings.ratePrompt}',
+          style: TextStyle(fontSize: 28, color: Colors.black),
+        ),
+      ),
+    );
+  }
+
+  Widget _rateBike() {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: sizeCalculator(context, AppStyles.rateStarPadding)),
+      child: Center(
+        child: SmoothStarRating(
+          rating: newRating,
+          isReadOnly: false,
+          size: sizeCalculator(context, AppStyles.rateStarSize),
+          filledIconData: Icons.star,
+          halfFilledIconData: Icons.star_half,
+          defaultIconData: Icons.star_border,
+          color: AppStyles.rateStarColor,
+          borderColor: AppStyles.rateStarBorderColor,
+          starCount: 5,
+          allowHalfRating: false,
+          spacing: 2.0,
+          onRated: (value) {
+            newRating = value;
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _submitButton() {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: sizeCalculator(context, AppStyles.rateSubmitButtonPadding)),
+      child: RaisedButton(
+        color: Colors.black,
+        textColor: Colors.white,
         child: Text("Submit"),
         onPressed: () {
           // calculate new rating
@@ -86,15 +117,19 @@ class _RateScreenState extends State<RateScreen> {
               .document(widget.documentID)
               .updateData({
             "rating": rating,
-          }).then((_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeScreen(),
-              ),
-            );
-          });
-        });
+          }).then(
+            (_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 
   void calcRating() {

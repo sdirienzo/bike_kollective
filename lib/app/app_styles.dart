@@ -52,4 +52,15 @@ class AppStyles {
 
   static final bikeListStarColor = Colors.black;
   static final bikeListStarBorderColor = Colors.black;
+
+  static final activeRidePadding = 0.04;
+
+  static final ratePadding = 0.04;
+  static final ratePromptPadding = 0.15;
+  static final rateStarPadding = 0.08;
+  static final rateStarSize = 0.07;
+  static final rateSubmitButtonPadding = 0.08;
+
+  static final rateStarColor = Colors.black;
+  static final rateStarBorderColor = Colors.black;
 }
