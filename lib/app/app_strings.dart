@@ -14,6 +14,7 @@ class AppStrings {
   static const bikeSizeKey = 'size';
   static const bikeTypeKey = 'type';
   static const bikeRatingKey = 'rating';
+  static const bikeRatingNumKey = 'ratingNum';
 
   /// Firebase DB Rides strings
   static const rideCollectionKey = 'rides';
