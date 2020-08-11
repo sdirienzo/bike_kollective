@@ -12,9 +12,10 @@ class RateScreen extends StatefulWidget {
   static const routeName = 'rate';
 
   final String documentID;
-  final DatabaseManager _db = DatabaseManager();
+  final DocumentSnapshot bikeDB;
 
-  RateScreen({Key key, @required this.documentID}) : super(key: key);
+  RateScreen({Key key, @required this.bikeDB, @required this.documentID})
+      : super(key: key);
 
   @override
   _RateScreenState createState() => _RateScreenState();
@@ -26,17 +27,8 @@ class _RateScreenState extends State<RateScreen> {
   double rating, numRating;
   double newRating = 0.0;
 
-  DocumentSnapshot _bike;
-  Image _bikeImage;
-
   @override
   void initState() {
-    _getBikeDetails().then((bikeResult) {
-      _bikeImage = Image.network(_bike['${AppStrings.bikeImageKey}']);
-      _bikeImage.image
-          .resolve(ImageConfiguration())
-          .addListener(ImageStreamListener((info, call) {}));
-    });
     super.initState();
   }
 
@@ -117,6 +109,7 @@ class _RateScreenState extends State<RateScreen> {
               .document(widget.documentID)
               .updateData({
             "rating": rating,
+            "ratingNum": numRating,
           }).then(
             (_) {
               Navigator.push(
@@ -150,19 +143,10 @@ class _RateScreenState extends State<RateScreen> {
   }
 
   double _getRating() {
-    return _bike.data.containsKey('${AppStrings.bikeRatingKey}')
-        ? _bike['${AppStrings.bikeRatingKey}'].toDouble()
-        : 0.0;
+    return widget.bikeDB['${AppStrings.bikeRatingKey}'].toDouble();
   }
 
   double _getRatingNum() {
-    return _bike.data.containsKey('${AppStrings.bikeRatingNumKey}')
-        ? _bike['${AppStrings.bikeRatingNumKey}'].toDouble()
-        : 0.0;
-  }
-
-  Future<void> _getBikeDetails() async {
-    _bike = await widget._db.getBike(widget.documentID);
-    return;
+    return widget.bikeDB['${AppStrings.bikeRatingNumKey}'].toDouble();
   }
 }

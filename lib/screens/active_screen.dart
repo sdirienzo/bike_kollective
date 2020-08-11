@@ -191,7 +191,7 @@ class _ActiveScreenState extends State<ActiveScreen>
       _endRide(widget.documentID, widget.userID, widget.rideID,
               location.latitude, location.longitude)
           .then((result) {
-        _pushRateScreen();
+        _pushRateScreen(widget.documentID);
       });
     });
   }
@@ -212,13 +212,14 @@ class _ActiveScreenState extends State<ActiveScreen>
     });
   }
 
-  void _pushRateScreen() {
+  void _pushRateScreen(documentID) {
     Navigator.pushNamedAndRemoveUntil(
       context,
       RateScreen.routeName,
       (route) => false,
       arguments: ScreenArguments(
-        documentID: widget.documentID,
+        bikeDB: widget.bikeDB,
+        documentID: documentID,
       ),
     );
   }

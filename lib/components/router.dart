@@ -40,7 +40,8 @@ class Router {
                 ));
       case RateScreen.routeName:
         return MaterialPageRoute(
-            builder: (context) => RateScreen(documentID: args.documentID));
+            builder: (context) =>
+                RateScreen(bikeDB: args.bikeDB, documentID: args.documentID));
       case ListScreen.routeName:
         return MaterialPageRoute(builder: (context) => ListScreen());
     }
