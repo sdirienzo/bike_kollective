@@ -12,7 +12,7 @@
     
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="bike_kollective"
+        android:label="Bike Kollective"
         android:icon="@mipmap/ic_launcher">
         <meta-data 
           android:name="com.google.android.geo.API_KEY"

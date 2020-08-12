@@ -3,6 +3,7 @@ import 'register_screen.dart';
 import 'home_screen.dart';
 import '../components/size_calculator.dart';
 import '../services/authentication_manager.dart';
+import '../services/database_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
 
@@ -11,6 +12,7 @@ class LoginScreen extends StatefulWidget {
   static const appLogoPath = 'lib/assets/images/app_logo.png';
 
   final AuthenticationManager _auth = AuthenticationManager();
+  final DatabaseManager _db = DatabaseManager();
 
   LoginScreen({Key key}) : super(key: key);
 
@@ -186,7 +188,14 @@ class _LoginScreenState extends State<LoginScreen> {
               _loginErrorSnackBar(AppStrings.unexpectedErrorMessage));
       }
     } else {
-      pushHome();
+      widget._db.getUser(_userId).then((user) {
+        if (!user['${AppStrings.userAccountDisabledKey}']) {
+          pushHome();
+        } else {
+          Scaffold.of(_scaffoldContext).showSnackBar(
+              _loginErrorSnackBar(AppStrings.accountLockedErrorMessage));
+        }
+      });
     }
   }
 
