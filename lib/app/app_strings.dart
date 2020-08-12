@@ -90,6 +90,8 @@ class AppStrings {
   /// Bike Details screen strings
   static const bikeDetailsScreenTitle = 'BIKE DETAILS';
   static const checkoutButtonLabel = 'Check Out';
+  static const addBikeScreenTitle = 'ADD BIKE';
+  static const activeScreenTitle = 'ACTIVE RIDE';
 
   /// Check Out error messages
   static const bikeCheckedOutErrorMessage =
