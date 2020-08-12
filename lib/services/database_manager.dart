@@ -13,10 +13,18 @@ class DatabaseManager {
     });
   }
 
-  Future<DocumentSnapshot> getUser(String uid) async {
+  Future<DocumentSnapshot> getUser(String uid) {
     return Firestore.instance
         .document('${AppStrings.userCollectionKey}/$uid')
         .get();
+  }
+
+  Future<void> lockoutUser(String uid) {
+    return Firestore.instance
+        .document('${AppStrings.userCollectionKey}/$uid')
+        .updateData({
+      '${AppStrings.userAccountDisabledKey}': true,
+    });
   }
 
   Stream<QuerySnapshot> getAllAvailableBikes() {
@@ -54,20 +62,20 @@ class DatabaseManager {
     }
   }
 
-  Future<DocumentSnapshot> getBike(String documentID) async {
+  Future<DocumentSnapshot> getBike(String documentID) {
     return Firestore.instance
         .document('${AppStrings.bikeCollectionKey}/$documentID')
         .get();
   }
 
-  Future<void> checkOutBike(String documentID) async {
+  Future<void> checkOutBike(String documentID) {
     return Firestore.instance
         .document('${AppStrings.bikeCollectionKey}/$documentID')
         .updateData({'${AppStrings.bikeCheckedOutKey}': true});
   }
 
   Future<void> checkInBike(
-      String documentID, double latitude, double longitude) async {
+      String documentID, double latitude, double longitude) {
     return Firestore.instance
         .document('${AppStrings.bikeCollectionKey}/$documentID')
         .updateData({
@@ -77,7 +85,7 @@ class DatabaseManager {
     });
   }
 
-  Future<DocumentSnapshot> getActiveRide(String documentID) async {
+  Future<DocumentSnapshot> getActiveRide(String documentID) {
     return Firestore.instance
         .document('${AppStrings.rideCollectionKey}/$documentID')
         .get();
@@ -95,7 +103,7 @@ class DatabaseManager {
     });
   }
 
-  Future<void> endActiveRide(String documentID, DateTime endTime) async {
+  Future<void> endActiveRide(String documentID, DateTime endTime) {
     return Firestore.instance
         .document('${AppStrings.rideCollectionKey}/$documentID')
         .updateData({'${AppStrings.rideEndTimeKey}': endTime});

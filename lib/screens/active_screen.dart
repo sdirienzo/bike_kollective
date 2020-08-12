@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart';
+import 'package:bike_kollective/app/app_styles.dart';
+import 'package:bike_kollective/app/app_strings.dart';
 import 'package:bike_kollective/components/app_scaffold.dart';
+import 'package:bike_kollective/components/screen_arguments.dart';
+import 'package:bike_kollective/components/size_calculator.dart';
 import 'package:bike_kollective/screens/rate_screen.dart';
 import 'package:bike_kollective/screens/loading_screen.dart';
 import 'package:bike_kollective/screens/location_request_screen.dart';
-import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:bike_kollective/services/database_manager.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:location/location.dart';
-import '../components/size_calculator.dart';
-import '../app/app_styles.dart';
-import '../app/app_strings.dart';
 
 class ActiveScreen extends StatefulWidget {
   static const routeName = 'active';

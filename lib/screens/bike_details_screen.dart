@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:bike_kollective/screens/active_screen.dart';
 import 'package:bike_kollective/components/screen_arguments.dart';
 import 'package:bike_kollective/services/authentication_manager.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'loading_screen.dart';
-import '../components/app_scaffold.dart';
-import '../components/size_calculator.dart';
-import '../services/database_manager.dart';
-import '../app/app_styles.dart';
-import '../app/app_strings.dart';
+import 'package:bike_kollective/screens/loading_screen.dart';
+import 'package:bike_kollective/components/app_scaffold.dart';
+import 'package:bike_kollective/components/size_calculator.dart';
+import 'package:bike_kollective/services/database_manager.dart';
+import 'package:bike_kollective/services/background_manager.dart';
+import 'package:bike_kollective/app/app_styles.dart';
+import 'package:bike_kollective/app/app_strings.dart';
 
 class BikeDetailsScreen extends StatefulWidget {
   static const routeName = 'bikeDetails';
@@ -22,6 +22,7 @@ class BikeDetailsScreen extends StatefulWidget {
   final String documentID;
   final AuthenticationManager _auth = AuthenticationManager();
   final DatabaseManager _db = DatabaseManager();
+  final BackgroundManager _bm = BackgroundManager();
 
   BikeDetailsScreen({Key key, @required this.documentID}) : super(key: key);
 
@@ -240,6 +241,21 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     });
   }
 
+  // Future<String> _startRide(String userId, String bikeId) {
+  //   var startTime = DateTime.now();
+  //   return widget._db.checkOutBike(bikeId).then((checkOutResult) {
+  //     return widget._db
+  //         .startActiveRide(userId, bikeId, startTime)
+  //         .then((activeRide) {
+  //       return widget._db
+  //           .addUserActiveRide(userId, activeRide.documentID)
+  //           .then((addUserRideResult) {
+  //         return activeRide.documentID;
+  //       });
+  //     });
+  //   });
+  // }
+
   Future<String> _startRide(String userId, String bikeId) {
     var startTime = DateTime.now();
     return widget._db.checkOutBike(bikeId).then((checkOutResult) {
@@ -249,7 +265,11 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
         return widget._db
             .addUserActiveRide(userId, activeRide.documentID)
             .then((addUserRideResult) {
-          return activeRide.documentID;
+          return widget._bm
+              .registerPeriodicNotifcation(activeRide.documentID)
+              .then((value) {
+            return activeRide.documentID;
+          });
         });
       });
     });
