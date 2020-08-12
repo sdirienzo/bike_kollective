@@ -1,3 +1,4 @@
+import 'package:bike_kollective/screens/terms_screen.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import '../components/size_calculator.dart';
@@ -5,6 +6,8 @@ import '../services/authentication_manager.dart';
 import '../services/database_manager.dart';
 import '../app/app_styles.dart';
 import '../app/app_strings.dart';
+import 'package:flutter/gestures.dart';
+import 'package:checkbox_formfield/checkbox_formfield.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = 'register';
@@ -22,6 +25,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   var _scaffoldContext, _email, _password, _userId, _error;
+  var checkboxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: ListView(
             children: <Widget>[
               _appLogo(),
+              _termsCheckField(),
               _emailField(),
               _passwordField(),
               _registerButton(),
@@ -68,10 +73,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  Widget _termsCheckField() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: CheckboxListTileFormField(
+        title: new RichText(
+          text: new TextSpan(
+              style: TextStyle(color: Colors.grey, fontSize: 17.0),
+              text: 'By checking you agree to Bike Kollective\'s ',
+              children: [
+                TextSpan(
+                    text: 'Terms of Service',
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        Navigator.pushNamed(context, TermsScreen.routeName);
+                      }),
+              ]),
+        ),
+        onSaved: (bool value) {},
+        validator: (bool value) {
+          if (value) {
+            return null;
+          } else {
+            return 'You are required to agree to the terms of service';
+          }
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: Colors.green,
+      ),
+    );
+  }
+
   Widget _emailField() {
     return Padding(
-      padding: EdgeInsets.only(
-          top: sizeCalculator(context, AppStyles.registerEmailFieldPadding)),
+      padding: EdgeInsets.only(top: 10.0),
       child: TextFormField(
         autofocus: false,
         keyboardType: TextInputType.emailAddress,

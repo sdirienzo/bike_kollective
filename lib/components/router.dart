@@ -4,6 +4,7 @@ import 'package:bike_kollective/screens/active_screen.dart';
 import 'package:bike_kollective/screens/addBike_screen.dart';
 import 'package:bike_kollective/screens/home_screen.dart';
 import 'package:bike_kollective/screens/list_screen.dart';
+import 'package:bike_kollective/screens/terms_screen.dart';
 import 'package:bike_kollective/screens/rate_screen.dart';
 import 'package:bike_kollective/screens/register_screen.dart';
 import 'package:bike_kollective/screens/bike_details_screen.dart';
@@ -22,6 +23,8 @@ class Router {
         return MaterialPageRoute(builder: (context) => RegisterScreen());
       case HomeScreen.routeName:
         return MaterialPageRoute(builder: (context) => HomeScreen());
+      case TermsScreen.routeName:
+        return MaterialPageRoute(builder: (context) => TermsScreen());
       case ListScreen.routeName:
         return MaterialPageRoute(builder: (context) => ListScreen());
       case AddBikeScreen.routeName:
@@ -41,8 +44,6 @@ class Router {
       case RateScreen.routeName:
         return MaterialPageRoute(
             builder: (context) => RateScreen(documentID: args.documentID));
-      case ListScreen.routeName:
-        return MaterialPageRoute(builder: (context) => ListScreen());
     }
   }
 }
