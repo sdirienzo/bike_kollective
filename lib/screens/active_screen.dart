@@ -122,12 +122,16 @@ class _ActiveScreenState extends State<ActiveScreen>
   Widget _combo() {
     return Padding(
       padding: EdgeInsets.only(top: sizeCalculator(context, 0.04)),
-      child: Center(
-        child: Text(
-          widget.bikeDB['${AppStrings.bikeCombinationKey}'],
-          style: TextStyle(fontSize: 32),
+      child: Column(children: [
+        Text(
+          'Lock Combination:',
+          style: TextStyle(fontSize: 20),
         ),
-      ),
+        Text(
+          widget.bikeDB['${AppStrings.bikeCombinationKey}'],
+          style: TextStyle(fontSize: 40),
+        ),
+      ]),
     );
   }
 
