@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:bike_kollective/screens/loading_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,7 +9,6 @@ import 'package:path/path.dart' as Path;
 import '../app/app_styles.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
 
 class AddBikeScreen extends StatefulWidget {
   static const routeName = 'add';
