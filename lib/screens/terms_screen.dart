@@ -2,18 +2,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../app/app_styles.dart';
 
-class AddBikeScreen extends StatefulWidget {
-  static const routeName = 'add';
+class TermsScreen extends StatefulWidget {
+  static const routeName = 'terms';
 
-  AddBikeScreen({
+  TermsScreen({
     Key key,
   }) : super(key: key);
 
   @override
-  _AddBikeScreenState createState() => _AddBikeScreenState();
+  _TermsScreenState createState() => _TermsScreenState();
 }
 
-class _AddBikeScreenState extends State<AddBikeScreen> {
+class _TermsScreenState extends State<TermsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
