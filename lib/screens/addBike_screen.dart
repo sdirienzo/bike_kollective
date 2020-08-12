@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:bike_kollective/screens/loading_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -8,16 +7,17 @@ import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import '../app/app_styles.dart';
+import '../components/app_scaffold.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import '../components/location_on_app_drawer.dart';
+import '../app/app_strings.dart';
 
 class AddBikeScreen extends StatefulWidget {
   static const routeName = 'add';
+  final String userEmail;
 
-  AddBikeScreen({
-    Key key,
-  }) : super(key: key);
+  AddBikeScreen({Key key, @required this.userEmail}) : super(key: key);
 
   @override
   _AddBikeScreenState createState() => _AddBikeScreenState();
@@ -48,8 +48,9 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppStyles.primaryScaffoldBackgroundColor,
+    return AppScaffold(
+      title: '${AppStrings.addBikeScreenTitle}',
+      drawer: null,
       body: ModalProgressHUD(
         progressIndicator: SpinKitWave(
           color: Colors.black,
@@ -84,6 +85,8 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                 .map((bikeType) =>
                     DropdownMenuItem(value: bikeType, child: Text("$bikeType")))
                 .toList(),
+            decoration:
+                InputDecoration(contentPadding: EdgeInsets.only(top: 40.0)),
           ),
           FormBuilderDropdown(
             attribute: "bikeSize",
@@ -93,10 +96,16 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
                 .map((bikeSize) =>
                     DropdownMenuItem(value: bikeSize, child: Text("$bikeSize")))
                 .toList(),
+            decoration:
+                InputDecoration(contentPadding: EdgeInsets.only(top: 40.0)),
           ),
           FormBuilderTextField(
               attribute: "bikeCombo",
-              decoration: InputDecoration(labelText: "Combo of Bike Lock"),
+              autofocus: false,
+              decoration: InputDecoration(
+                  labelText: "Combo of Bike Lock",
+                  contentPadding: EdgeInsets.only(top: 40.0),
+                  focusColor: Colors.black),
               validators: [FormBuilderValidators.required()]),
         ],
       ),
@@ -108,7 +117,7 @@ class _AddBikeScreenState extends State<AddBikeScreen> {
       margin: const EdgeInsets.only(top: 30.0, bottom: 30.0),
       child: _image == null
           ? IconButton(
-              icon: Icon(Icons.add_a_photo, color: Colors.blue, size: 60.0),
+              icon: Icon(Icons.add_a_photo, color: Colors.black, size: 60.0),
               onPressed: _getImage)
           : Stack(
               children: <Widget>[

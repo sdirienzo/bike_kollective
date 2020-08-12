@@ -23,7 +23,7 @@ class RateScreen extends StatefulWidget {
 class _RateScreenState extends State<RateScreen> {
   final firestoreInstance = Firestore.instance;
 
-  double rating, numRating;
+  double rating, ratingNum;
   double newRating = 0.0;
 
   DocumentSnapshot _bike;
@@ -117,6 +117,7 @@ class _RateScreenState extends State<RateScreen> {
               .document(widget.documentID)
               .updateData({
             "rating": rating,
+            "ratingNum": ratingNum,
           }).then(
             (_) {
               Navigator.push(
@@ -135,17 +136,17 @@ class _RateScreenState extends State<RateScreen> {
   void calcRating() {
     // retrieve current rating and number of ratings
     rating = _getRating();
-    numRating = _getRatingNum();
+    ratingNum = _getRatingNum();
 
-    if (numRating == 0) {
-      numRating++;
+    if (ratingNum == 0) {
+      ratingNum++;
       rating = newRating;
     } else {
       // calculate new rating average
-      rating = rating * numRating;
-      numRating++;
+      rating = rating * ratingNum;
+      ratingNum++;
       // return new average
-      rating = (rating + newRating) / numRating;
+      rating = (rating + newRating) / ratingNum;
     }
   }
 

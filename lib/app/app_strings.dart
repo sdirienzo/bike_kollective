@@ -66,6 +66,9 @@ class AppStrings {
 
   /// Register screen strings
   static const registerButtonLabel = 'Create an Account';
+  static const registerTermsAgreement =
+      'by checking I agree to Bike Kollective\s Terms of Use Agreement.';
+  static const registerTermsLink = 'View Terms of Use Agreement.';
 
   /// Register error codes
   static const weakPasswordErrorCode = 'ERROR_WEAK_PASSWORD';
@@ -88,6 +91,8 @@ class AppStrings {
   /// Bike Details screen strings
   static const bikeDetailsScreenTitle = 'BIKE DETAILS';
   static const checkoutButtonLabel = 'Check Out';
+  static const addBikeScreenTitle = 'ADD BIKE';
+  static const activeScreenTitle = 'ACTIVE RIDE';
 
   /// Check Out error messages
   static const bikeCheckedOutErrorMessage =
