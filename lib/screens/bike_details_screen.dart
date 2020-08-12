@@ -241,21 +241,6 @@ class _BikeDetailsScreenState extends State<BikeDetailsScreen> {
     });
   }
 
-  // Future<String> _startRide(String userId, String bikeId) {
-  //   var startTime = DateTime.now();
-  //   return widget._db.checkOutBike(bikeId).then((checkOutResult) {
-  //     return widget._db
-  //         .startActiveRide(userId, bikeId, startTime)
-  //         .then((activeRide) {
-  //       return widget._db
-  //           .addUserActiveRide(userId, activeRide.documentID)
-  //           .then((addUserRideResult) {
-  //         return activeRide.documentID;
-  //       });
-  //     });
-  //   });
-  // }
-
   Future<String> _startRide(String userId, String bikeId) {
     var startTime = DateTime.now();
     return widget._db.checkOutBike(bikeId).then((checkOutResult) {

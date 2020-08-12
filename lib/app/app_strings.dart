@@ -62,6 +62,7 @@ class AppStrings {
   /// Login error messages
   static const loginErrorMessage =
       'Invalid email and/or password.  Please try again';
+  static const accountLockedErrorMessage = 'This account has been locked';
 
   /// Register screen strings
   static const registerButtonLabel = 'Create an Account';
